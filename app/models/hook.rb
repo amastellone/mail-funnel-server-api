@@ -1,0 +1,2 @@
+class Hook < ApplicationRecord
+end

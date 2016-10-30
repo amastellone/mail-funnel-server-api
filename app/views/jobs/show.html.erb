@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Time:</strong>
+  <%= @job.time %>
+</p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= @job.subject %>
+</p>
+
+<p>
+  <strong>Content:</strong>
+  <%= @job.content %>
+</p>
+
+<p>
+  <strong>Email list uuid:</strong>
+  <%= @job.email_list_uuid %>
+</p>
+
+<p>
+  <strong>App uuid:</strong>
+  <%= @job.app_uuid %>
+</p>
+
+<p>
+  <strong>Hook uuid:</strong>
+  <%= @job.hook_uuid %>
+</p>
+
+<p>
+  <strong>User local:</strong>
+  <%= @job.user_local_id %>
+</p>
+
+<%= link_to 'Edit', edit_job_path(@job) %> |
+<%= link_to 'Back', jobs_path %>

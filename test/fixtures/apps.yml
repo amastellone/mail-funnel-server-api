@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_local_id: 1
+  name: MyString
+  api_key: MyString
+  api_secret: MyText
+
+two:
+  user_local_id: 1
+  name: MyString
+  api_key: MyString
+  api_secret: MyText
