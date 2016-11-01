@@ -1,6 +1,11 @@
 source 'https://rubygems.org'
 
-gem "her"
+# REST ORM
+gem 'her'
+
+# GRAPE - API-Server
+gem 'hashie-forbidden_attributes'
+gem 'grape'
 
 
 gem 'schema_auto_foreign_keys'
