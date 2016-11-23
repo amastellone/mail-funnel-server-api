@@ -1,10 +1,9 @@
-Rails.application.routes.draw do
+MailFunnelServer::Application.routes.draw do
 
-	root :to => 'home#index'
+	# root :to => 'home#index'
 
-	# mount ShopifyApp::Engine, at: '/'
-
-  mount MailFunnel::API => '/'
+	# mount MailFunnel::API => '/'
+	mount API => '/'
 
   # resources :hooks
   # resources :email_lists
