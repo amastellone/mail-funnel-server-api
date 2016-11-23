@@ -3,8 +3,6 @@ class CreateEmails < ActiveRecord::Migration[5.0]
     create_table :emails do |t|
       t.string :email
       t.string :name
-      t.references :email_list_id, foreign_key: true
-      t.references :app_id, foreign_key: true
 
       t.timestamps
     end

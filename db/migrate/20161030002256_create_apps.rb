@@ -1,5 +1,12 @@
-class EnableidExtension < ActiveRecord::Migration[5.0]
+class CreateApps < ActiveRecord::Migration[5.0]
   def change
-    # enable_extension 'id-ossp'
+    create_table :apps do |t|
+      # t.integer :user_local_id
+      t.string :name
+      t.string :api_key
+      t.text :api_secret
+
+      t.timestamps
+    end
   end
 end
