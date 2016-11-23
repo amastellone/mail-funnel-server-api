@@ -17,7 +17,7 @@ class EmailListsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create email_list" do
     assert_difference('EmailList.count') do
-      post email_lists_url, params: { email_list: { app_uuid_id: @email_list.app_uuid_id, description: @email_list.description, name: @email_list.name, user_local_id: @email_list.user_local_id } }
+      post email_lists_url, params: { email_list: { app_id: @email_list.app_id, description: @email_list.description, name: @email_list.name, user_local_id: @email_list.user_local_id } }
     end
 
     assert_redirected_to email_list_url(EmailList.last)
@@ -34,7 +34,7 @@ class EmailListsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update email_list" do
-    patch email_list_url(@email_list), params: { email_list: { app_uuid_id: @email_list.app_uuid_id, description: @email_list.description, name: @email_list.name, user_local_id: @email_list.user_local_id } }
+    patch email_list_url(@email_list), params: { email_list: { app_id: @email_list.app_id, description: @email_list.description, name: @email_list.name, user_local_id: @email_list.user_local_id } }
     assert_redirected_to email_list_url(@email_list)
   end
 

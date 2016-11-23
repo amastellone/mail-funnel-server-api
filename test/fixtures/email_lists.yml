@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  app_uuid: one
+  app_id: one
   user_local_id: 1
   name: MyString
   description: MyText
 
 two:
-  app_uuid: two
+  app_id: two
   user_local_id: 1
   name: MyString
   description: MyText

@@ -3,11 +3,11 @@
 one:
   email: MyString
   name: MyString
-  email_list_uuid: one
-  app_uuid: one
+  email_list_id: one
+  app_id: one
 
 two:
   email: MyString
   name: MyString
-  email_list_uuid: two
-  app_uuid: two
+  email_list_id: two
+  app_id: two
