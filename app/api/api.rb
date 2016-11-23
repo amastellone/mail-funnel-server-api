@@ -1,146 +1,375 @@
-module Mailfunnel
-	class API < Grape::API
+class API < Grape::API
+	prefix 'api'
+	format :json
 
-		helpers do
-			def current_user
-				@current_user ||= User.authorize!(env)
-			end
+	puts "DEFAULT VARS:"
+	puts @key
+	puts @secret
+	puts @tokens
 
-			def authenticate!
-				error!('401 Unauthorized', 401) unless current_user
-			end
+	def initialize
+		super
+	end
+
+	helpers do
+
+		def initvars
+			puts 'INITIALIZED CONSTRUCTOR'
+			Dotenv::Railtie.load
+			# @key      = ENV['APP_KEY']
+			# @secret   = ENV['APP_SECRET']
+			# @appurl   = ENV['APP_URL']
+			@key = "84990ccf831cea238324340d512307d"
+			@secret = "18fb76db454fd01af035ebed69af51b6"
+			@appurl = "http://e90ef07a.ngrok.io/api/"
+			@appname  = "mailfunnel-server"
+			@appscope = ENV['APP_SCOPE']
+			@tokens   = {}
+
+			puts "HELPER VARS:"
+			puts @key
+			puts @secret
+			puts @tokens
 		end
 
-		resource :jobs do
-			desc 'Returns Jobs for an App'
-			params do
-				requires :id, type: Integer, desc: 'App ID.'
-			end
-			route_param :id do
-				get do
-					Job.where(app_id: params[:id])
-				end
-			end
 
-			desc 'Adds a new Job.'
-			params do
-				# t.references :time, foreign_key: true
-				# t.string :subject
-				# t.text :content
-				# t.references :email_list_id, foreign_key: true
-				# t.references :app_id, foreign_key: true
-				# t.references :hook_id, foreign_key: true
-				# t.integer :user_local_id
-				# TODO: Change frequency to single value - time from trigger to send email
-				requires :frequency, type: String, desc: 'Set Time as String'
-				requires :frequency_value, type: Integer, desc: 'Value of the Frequency'
-				# requires :email, type: String, desc: 'Email'
-				requires :content, type: String, desc: 'Content'
-				requires :email_list_id, type: Integer, desc: 'Email List ID.'
-				requires :user_local_id, type: Integer, desc: 'Local User ID'
-				requires :hook_id, type: Integer, desc: 'List ID.'
-				requires :app_id, type: String, desc: 'App_ID'
-				requires :list_id, type: String, desc: 'List ID.'
-			end
-			post do
-				authenticate!
-				Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
-			end
+		def current_user
+			# @current_user ||= User.authorize!(env)
 		end
 
-		resource :email_lists do
-			desc 'Returns Email-Lists for an App'
-			params do
-				requires :id, type: Integer, desc: 'App ID.'
-			end
-			route_param :id do
-				get do
-					EmailList.where(app_id: params[:id])
-				end
-			end
-
+		def authenticate!
+			error!('401 Unauthorized', 401) unless current_user
 		end
-		resource :emails do
-			desc 'Returns List of Emails'
-			params do
-				requires :id, type: Integer, desc: 'Email-List ID.'
-			end
-			route_param :id do
-				get do
-					Email.where(list_id: params[:id])
-				end
-			end
 
-			desc 'Add an Email.'
-			params do
-				requires :name, type: String, desc: 'Name Update'
-				requires :email, type: String, desc: 'Email update'
-				requires :app_id, type: String, desc: 'App_ID'
-				requires :list_id, type: String, desc: 'List ID.'
-			end
-			post do
-				authenticate!
-				Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
-			end
+		def get_shop_access_token(shop, client_id, client_secret, code)
+			if @tokens[shop].nil?
+				url = "https://#{shop}/admin/oauth/access_token"
 
-			desc 'Add or Update an email.'
-			params do
-				requires :id, type: Integer, desc: 'Email ID. Leave blank for new'
-				requires :name, type: String, desc: 'Name Update'
-				requires :email, type: String, desc: 'Email update'
-				requires :app_id, type: String, desc: 'App_ID'
-				requires :list_id, type: String, desc: 'List ID.'
-			end
-			put ':id' do
-				authenticate!
-				if params[:id] == 0
-					Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
+				payload = {
+					 client_id:     client_id,
+					 client_secret: client_secret,
+					 code:          code }
+
+				response = HTTParty.post(url, body: payload)
+				# if the response is successful, obtain the token and store it in a hash
+				if response.code == 200
+					@tokens[shop] = response['access_token']
 				else
-					Email.find(params[:id]).update({ id: params[:id], text: params[:status] })
+					return [500, "Something went wrong."]
 				end
-			end
 
-			desc 'Delete an Email.'
-			params do
-				requires :id, type: String, desc: 'Email ID.'
-			end
-			delete ':id' do
-				authenticate!
-				Email.find(params[:id]).destroy
+				instantiate_session(shop)
 			end
 		end
 
-		resource :hooks do
-			desc 'Returns All Hooks'
-			get :get_hooks do
-				Hook.limit(10)
+		def instantiate_session(shop)
+			# now that the token is available, instantiate a session
+			session = ShopifyAPI::Session.initialize(shop, @tokens[shop])
+			ShopifyAPI::Base.activate_session(session)
+		end
+
+		def validate_hmac(hmac, request)
+			h      = params.reject { |k, _| k == 'hmac' || k == 'signature' }
+			query  = URI.escape(h.sort.collect { |k, v| "#{k}=#{v}" }.join('&'))
+			digest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), @secret, query)
+
+			unless (hmac == digest)
+				return [403, "Authentication failed. Digest provided was: #{digest}"]
 			end
 		end
 
-		resource :apps do
-			desc 'Verify if App is Valid by validating API Keys'
-			get :verify_app
-			params do
-				requires :app_id, type: Integer, desc: 'App ID.'
-				requires :shopify_api, type: String, desc: 'Shopify API KEY.'
+		def verify_webhook(hmac, data)
+			digest          = OpenSSL::Digest.new('sha256')
+			calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, @secret, data)).strip
+
+			hmac == calculated_hmac
+		end
+
+		def bulk_edit_url
+			bulk_edit_url = "https://www.shopify.com/admin/bulk"\
+                    "?resource_name=ProductVariant"\
+                    "&edit=metafields.test.ingredients:string"
+			return bulk_edit_url
+		end
+
+		def create_all_webhooks
+			create_order_webhook
+		end
+
+		def create_order_webhook
+			# create webhook for order creation if it doesn't exist
+			unless ShopifyAPI::Webhook.find(:all).any?
+				webhook = {
+					 topic:   'cart/create',
+					 address: "#{@appurl}cart/create",
+					 format:  'json' }
+
+				ShopifyAPI::Webhook.create(webhook)
+				# TODO: CREATE ONE FOR EACH WEBHOOK
 			end
-			route_param :id do
-				get do
-					App.where(id: params[:app_id]).any?
-					# TODO: Second layer auth
+		end
+
+		def add_app(name)
+			App.find_or_create_by(name: name)
+		end
+	end
+
+	# SHOPIFY WEBHOOKS
+
+	get :install do
+		initvars()
+
+		add_app(params[:shop])
+
+		shop        = params[:shop]
+		scopes      = "read_orders,read_products"
+
+		puts "INSTALL KEY VARIABLE:"
+		puts @key
+
+		# construct the installation URL and redirect the merchant
+		install_url = "http://#{shop}/admin/oauth/authorize?client_id=#{@key}"\
+                "&scope=#{scopes}&redirect_uri=#{@appurl}auth"
+
+		# redirect to the install_url
+		redirect install_url
+	end
+
+	get :auth do
+		initvars()
+
+		# extract shop data from request parameters
+		shop = params[:shop]
+		code = params[:code]
+		hmac = params[:hmac]
+
+		# perform hmac validation to determine if the request is coming from Shopify
+		validate_hmac(hmac, request)
+
+		# if no access token for this particular shop exist,
+		# POST the OAuth request and receive the token in the response
+		get_shop_access_token(shop, @key, @secret, code)
+
+		# create webhook for order creation if it doesn't exist
+		create_all_webhooks
+
+		# now that the session is activated, redirect to the bulk edit page
+		redirect bulk_edit_url
+	end
+
+	resource :cart do
+		get :create do
+			initvars()
+			shop  = params[:shop]
+			email = params[:email]
+			code  = params[:code]
+			hmac  = params[:hmac]
+
+			hmac = request.env['HTTP_X_SHOPIFY_HMAC_SHA256']
+
+			request.body.rewind
+			data       = request.body.read
+			webhook_ok = verify_webhook(hmac, data)
+
+			if webhook_ok
+				shop  = request.env['HTTP_X_SHOPIFY_SHOP_DOMAIN']
+				token = @tokens[shop]
+
+				unless token.nil?
+					session = ShopifyAPI::Session.initialize(shop, token)
+					ShopifyAPI::Base.activate_session(session)
+				else
+					return [403, "You're not authorized to perform this action."]
 				end
+			else
+				return [403, "You're not authorized to perform this action."]
 			end
 
-			desc 'Create App'
-			get :create_app
-			params do
-				requires :shopify_key, type: String, desc: 'Shopify Key.'
-				requires :name, type: String, desc: 'Shopify Shop Name.'
-			end
-			route_param :id do
-				get do
-					App.create(shopify_key: params[:shopify_key], shopify_name: params[:shopify_name])
+
+			# parse the request body as JSON data
+			json_data = JSON.parse data
+
+			line_items = json_data['line_items']
+
+			line_items.each do |line_item|
+				variant_id = line_item['variant_id']
+
+				variant = ShopifyAPI::Variant.find(variant_id)
+
+				variant.metafields.each do |field|
+					if field.key == 'ingredients'
+						items = field.split(',')
+
+						items.each do |item|
+							item = ShopifyAPI::Variant.find(item)
+
+							session = ShopifyAPI::Session.setup({ :api_key => @key, :secret => @secret })
+							# Get Item ID
+							# Get Store that item belongs to
+							# Check if hook exists for store
+							# Identify Email-List By Store and Hook
+							# Add Email to Email-List
+						end
+
+					end
 				end
+			end
+		end
+
+		# WEBHOOKS
+
+		get '/cart/update' do
+			shop  = params[:shop]
+			email = params[:email]
+			shop  = params[:shop]
+		end
+
+		get '/checkouts/create' do
+		end
+
+		get '/checkouts/delete' do
+		end
+
+		get '/checkouts/update' do
+		end
+	end
+
+
+	# REST API
+
+	resource :jobs do
+		desc 'Get all Jobs IE: http://localhost:3000/api/jobs/all'
+		get :all do
+			Job.all
+		end
+		desc 'Returns Jobs for an App'
+		params do
+			requires :id, type: Integer, desc: 'App ID.'
+		end
+		route_param :id do
+			get do
+				app = App.where(name: params[:id])
+				Job.where(app_id: params[:id])
+			end
+		end
+
+		desc 'Adds a new Job.'
+		params do
+			# t.references :time, foreign_key: true
+			# t.string :subject
+			# t.text :content
+			# t.references :email_list_id, foreign_key: true
+			# t.references :app_id, foreign_key: true
+			# t.references :hook_id, foreign_key: true
+			# t.integer :user_local_id
+			# TODO: Change frequency to single value - time from trigger to send email
+			requires :frequency, type: String, desc: 'Set Time as String'
+			requires :frequency_value, type: Integer, desc: 'Value of the Frequency'
+			# requires :email, type: String, desc: 'Email'
+			requires :content, type: String, desc: 'Content'
+			requires :email_list_id, type: Integer, desc: 'Email List ID.'
+			requires :user_local_id, type: Integer, desc: 'Local User ID'
+			requires :hook_identifier, type: String, desc: 'Hook Identifier'
+			requires :app, type: String, desc: 'App Name'
+			requires :list_id, type: String, desc: 'List ID.'
+		end
+		post do
+			authenticate!
+			Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
+		end
+	end
+
+	resource :email_lists do
+		desc 'Returns Email-Lists for an App'
+		params do
+			requires :name, type: String, desc: 'Shopify Shop Name.'
+		end
+		route_param :id do
+			get do
+				theapp = App.where(app: params[:name]).first
+				EmailList.where(app: theapp)
+			end
+		end
+
+	end
+	resource :emails do
+		desc 'Returns List of Emails'
+		params do
+			requires :name, type: String, desc: 'Shopify Shop Name.'
+		end
+		route_param :id do
+			get do
+				Email.where(list_id: params[:id])
+			end
+		end
+
+		desc 'Add an Email.'
+		params do
+			requires :name, type: String, desc: 'Name Update'
+			requires :email, type: String, desc: 'Email update'
+			requires :app_id, type: String, desc: 'App_ID'
+			requires :list_id, type: String, desc: 'List ID.'
+		end
+		post do
+			authenticate!
+			Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
+		end
+
+		desc 'Add or Update an email.'
+		params do
+			requires :id, type: Integer, desc: 'Email ID. Leave blank for new'
+			requires :name, type: String, desc: 'Name Update'
+			requires :email, type: String, desc: 'Email update'
+			requires :app_id, type: String, desc: 'App_ID'
+			requires :list_id, type: String, desc: 'List ID.'
+		end
+		put ':id' do
+			authenticate!
+			if params[:id] == 0
+				Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
+			else
+				Email.find(params[:id]).update({ id: params[:id], text: params[:status] })
+			end
+		end
+
+		desc 'Delete an Email.'
+		params do
+			requires :id, type: String, desc: 'Email ID.'
+		end
+		delete ':id' do
+			authenticate!
+			Email.find(params[:id]).destroy
+		end
+	end
+
+	resource :hooks do
+		desc 'Returns All Hooks'
+		get :get_hooks do
+			Hook.limit(10)
+		end
+	end
+
+	resource :apps do
+		desc 'Verify if App is Valid by validating API Keys'
+		get :verify_app
+		params do
+			requires :name, type: String, desc: 'Shopify Shop Name.'
+		end
+		route_param :id do
+			get do
+				App.where(name: params[:name]).any?
+			end
+		end
+
+		desc 'Create Or Update App'
+		get :create_app
+		params do
+			requires :name, type: String, desc: 'Shopify Shop Name.'
+		end
+		route_param :id do
+			get do
+				App.find_or_create_by(name: name)
+				App.create(name: params[:name])
 			end
 		end
 	end
