@@ -1,0 +1,80 @@
+
+---
+apps:
+  columns:
+  - id
+  - name
+  - api_key
+  - api_secret
+  - created_at
+  - updated_at
+  records: 
+  - - 1
+    - bluehelmet-dev.myshopify.com
+    - 
+    - 
+    - '2016-11-23 05:40:10.438325'
+    - '2016-11-23 05:40:10.438325'
+
+---
+ar_internal_metadata:
+  columns:
+  - key
+  - value
+  - created_at
+  - updated_at
+  records: 
+  - - environment
+    - development
+    - '2016-11-10 03:29:19.275803'
+    - '2016-11-10 03:29:19.275803'
+
+---
+hooks:
+  columns:
+  - id
+  - name
+  - identifier
+  - created_at
+  - updated_at
+  records: 
+  - - 1
+    - Cart / Create
+    - cart_create
+    - '2016-11-23 05:48:26.348186'
+    - '2016-11-23 05:48:26.348186'
+  - - 2
+    - Cart / Create
+    - cart_create
+    - '2016-11-23 06:30:03.659771'
+    - '2016-11-23 06:30:03.659771'
+  - - 3
+    - Cart / Create
+    - cart_create
+    - '2016-11-23 06:31:29.882547'
+    - '2016-11-23 06:31:29.882547'
+  - - 4
+    - Cart / Update
+    - cart_update
+    - '2016-11-23 06:31:29.886762'
+    - '2016-11-23 06:31:29.886762'
+  - - 5
+    - Checkout / Create
+    - checkout_create
+    - '2016-11-23 06:31:29.889189'
+    - '2016-11-23 06:31:29.889189'
+  - - 6
+    - Checkout / Update
+    - checkout_update
+    - '2016-11-23 06:31:29.891068'
+    - '2016-11-23 06:31:29.891068'
+  - - 7
+    - Order / Create
+    - order_create
+    - '2016-11-23 06:31:29.893116'
+    - '2016-11-23 06:31:29.893116'
+  - - 8
+    - Order / Update
+    - order_update
+    - '2016-11-23 06:31:29.894991'
+    - '2016-11-23 06:31:29.894991'
