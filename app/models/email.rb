@@ -1,4 +1,4 @@
 class Email < ApplicationRecord
-  belongs_to :email_list_uuid
-  belongs_to :app_uuid
+  belongs_to :email_lists
+  belongs_to :apps
 end

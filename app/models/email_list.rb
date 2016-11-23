@@ -1,3 +1,4 @@
 class EmailList < ApplicationRecord
-  belongs_to :app_uuid
+  belongs_to :apps
+  has_many   :emails
 end
