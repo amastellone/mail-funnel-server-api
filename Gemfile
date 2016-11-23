@@ -1,7 +1,14 @@
 source 'https://rubygems.org'
 
+gem 'rspec-rails', '~> 3.0.1'
+
+group :test do
+	# gem 'capybara', '~> 2.3.0'
+end
+
 # REST ORM
 gem 'her'
+gem 'bcrypt'
 
 # GRAPE - API-Server
 gem 'hashie-forbidden_attributes'
@@ -13,10 +20,11 @@ gem 'yaml_db'
 gem 'dotenv-rails'
 
 # Shopify
-gem 'shopify_app'
+gem 'omniauth'
+gem 'shopify_api'
+# gem 'shopify_app'
 gem 'activeresource', :git => 'git://github.com/rails/activeresource.git'
 gem 'active_model_serializers', '~> 0.10.0.rc2'
-
 
 # RAILS
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
