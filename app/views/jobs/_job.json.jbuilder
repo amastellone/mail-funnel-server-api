@@ -1,2 +1,6 @@
-json.extract! job, :id, :time_id, :subject, :content, :email_list_uuid_id, :app_uuid_id, :hook_uuid_id, :user_local_id, :created_at, :updated_at
+json.extract! job, :id, :created_at, :updated_at, :frequency, :execute_time,
+              :subject, :content,
+              :email_list_id, :app_id,
+              :hook_identifier, :executed,
+              :campaign_identifier
 json.url job_url(job, format: :json)
