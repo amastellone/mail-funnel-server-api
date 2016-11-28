@@ -19,9 +19,9 @@ class API < Grape::API
 			# @key      = ENV['APP_KEY']
 			# @secret   = ENV['APP_SECRET']
 			# @appurl   = ENV['APP_URL']
-			@key = "84990ccf831cea238324340d512307d"
-			@secret = "18fb76db454fd01af035ebed69af51b6"
-			@appurl = "http://e90ef07a.ngrok.io/api/"
+			@key      = "84990ccf831cea238324340d512307d"
+			@secret   = "18fb76db454fd01af035ebed69af51b6"
+			@appurl   = "http://e90ef07a.ngrok.io/api/"
 			@appname  = "mailfunnel-server"
 			@appscope = ENV['APP_SCOPE']
 			@tokens   = {}
@@ -121,8 +121,8 @@ class API < Grape::API
 
 		add_app(params[:shop])
 
-		shop        = params[:shop]
-		scopes      = "read_orders,read_products"
+		shop   = params[:shop]
+		scopes = "read_orders,read_products"
 
 		puts "INSTALL KEY VARIABLE:"
 		puts @key
@@ -219,9 +219,17 @@ class API < Grape::API
 		# WEBHOOKS
 
 		get '/cart/update' do
+			ShopifyAPI::Session.setup(api_key: app.settings.api_key,
+			                          secret: app.settings.shared_secret)
+
 			shop  = params[:shop]
 			email = params[:email]
 			shop  = params[:shop]
+
+			appname = ShopifyAPI::Shop.myshopify_domain
+			customer = ShopifyAPI::Shop.customer_email
+
+
 		end
 
 		get '/checkouts/create' do
@@ -236,63 +244,57 @@ class API < Grape::API
 
 
 	# REST API
+	# URL Schema http://localhost:3000/api/jobs/all'
 
 	resource :jobs do
-		desc 'Get all Jobs IE: http://localhost:3000/api/jobs/all'
-		get :all do
-			Job.all
-		end
-		desc 'Returns Jobs for an App'
+
+		desc 'Returns Jobs for an App and Campaign'
 		params do
-			requires :id, type: Integer, desc: 'App ID.'
+			requires :id, type: Integer, desc: 'App ID'
+			requires :campaign_identifier, type: String, desc: 'Local Campaign Identifier'
 		end
-		route_param :id do
-			get do
-				app = App.where(name: params[:id])
-				Job.where(app_id: params[:id])
-			end
+		post do
+			Job.where(app_id: params[:id], campaign_identifier: params[:campaign_identifier])
 		end
 
 		desc 'Adds a new Job.'
+
 		params do
-			# t.references :time, foreign_key: true
-			# t.string :subject
-			# t.text :content
-			# t.references :email_list_id, foreign_key: true
-			# t.references :app_id, foreign_key: true
-			# t.references :hook_id, foreign_key: true
-			# t.integer :user_local_id
-			# TODO: Change frequency to single value - time from trigger to send email
-			requires :frequency, type: String, desc: 'Set Time as String'
-			requires :frequency_value, type: Integer, desc: 'Value of the Frequency'
-			# requires :email, type: String, desc: 'Email'
-			requires :content, type: String, desc: 'Content'
+			# t.references :time, foreign_key: true # Delete this
+			requires :frequency_time, type: Integer, desc: 'Value of the Frequency'
+			requires :email_content, type: String, desc: 'Email Contents'
+			requires :email_subject, type: String, desc: 'Email Subject'
 			requires :email_list_id, type: Integer, desc: 'Email List ID.'
-			requires :user_local_id, type: Integer, desc: 'Local User ID'
+			# requires :user_local_id, type: Integer, desc: 'Local User ID'
 			requires :hook_identifier, type: String, desc: 'Hook Identifier'
-			requires :app, type: String, desc: 'App Name'
-			requires :list_id, type: String, desc: 'List ID.'
+			requires :app_id, type: Integer, desc: 'App ID'
 		end
 		post do
 			authenticate!
-			Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
+
+			Job.create(frequency_time: params[:frequency_time],
+			           frequency_value: "execute_once", # execute_twice, execute_thrice
+			           subject: params[:email_subject],
+			           content: params[:email_content],
+			           frequency: params[:frequency])
+			           # TODO: finish adding params that are in controller
 		end
 	end
 
 	resource :email_lists do
 		desc 'Returns Email-Lists for an App'
 		params do
-			requires :name, type: String, desc: 'Shopify Shop Name.'
+			requires :id, type: Integer, desc: 'Shopify ID'
 		end
 		route_param :id do
 			get do
-				theapp = App.where(app: params[:name]).first
-				EmailList.where(app: theapp)
+				EmailList.where(app_id: params[:id])
 			end
 		end
-
 	end
+
 	resource :emails do
+
 		desc 'Returns List of Emails'
 		params do
 			requires :name, type: String, desc: 'Shopify Shop Name.'
@@ -320,8 +322,8 @@ class API < Grape::API
 			requires :id, type: Integer, desc: 'Email ID. Leave blank for new'
 			requires :name, type: String, desc: 'Name Update'
 			requires :email, type: String, desc: 'Email update'
-			requires :app_id, type: String, desc: 'App_ID'
-			requires :list_id, type: String, desc: 'List ID.'
+			requires :app_id, type: Integer, desc: 'App_ID'
+			requires :list_id, type: Integer, desc: 'List ID.'
 		end
 		put ':id' do
 			authenticate!
@@ -343,6 +345,18 @@ class API < Grape::API
 	end
 
 	resource :hooks do
+
+		desc 'Get Hook ID'
+		get :get_id
+		params do
+			requires :name, type: String, desc: 'Shopify App Name.'
+		end
+		route_param :id do
+			get do
+				result = App.where(name: params[:name]).first.id
+			end
+		end
+
 		desc 'Returns All Hooks'
 		get :get_hooks do
 			Hook.limit(10)
@@ -350,14 +364,14 @@ class API < Grape::API
 	end
 
 	resource :apps do
-		desc 'Verify if App is Valid by validating API Keys'
-		get :verify_app
+		desc 'Get Shopify App ID from Shopify App name'
+		get :get_id
 		params do
-			requires :name, type: String, desc: 'Shopify Shop Name.'
+			requires :name, type: String, desc: 'Shopify App Name.'
 		end
 		route_param :id do
 			get do
-				App.where(name: params[:name]).any?
+				result = App.where(name: params[:name]).first.id
 			end
 		end
 
@@ -366,10 +380,9 @@ class API < Grape::API
 		params do
 			requires :name, type: String, desc: 'Shopify Shop Name.'
 		end
-		route_param :id do
+		route_param :name do
 			get do
-				App.find_or_create_by(name: name)
-				App.create(name: params[:name])
+				App.find_or_create_by(name: params[:name])
 			end
 		end
 	end
