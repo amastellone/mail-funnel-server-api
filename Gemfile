@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'http'
+
 gem 'rspec-rails', '~> 3.0.1'
 
 group :test do
@@ -77,6 +79,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'table_print'
   gem 'pry-rails'
+  gem 'faker'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
