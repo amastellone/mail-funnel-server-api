@@ -22,6 +22,8 @@ Dotenv::Railtie.load
 
 module MailFunnelServer
   class Application < Rails::Application
+    config.api_only = true
+
     # config.action_dispatch.default_headers['P3P'] = 'CP="Not used"'
     # config.action_dispatch.default_headers.delete('X-Frame-Options')
 
@@ -37,5 +39,13 @@ module MailFunnelServer
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    config.middleware.insert_before 0, Rack::Cors do
+	    allow do
+		    origins '*'
+		    resource '*', :headers => :any, :methods => [:any]
+	    end
+    end
+
   end
 end
