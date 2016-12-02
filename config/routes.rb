@@ -1,6 +1,5 @@
 MailFunnelServer::Application.routes.draw do
 
-  resources :testmodels
 	# root :to => 'home#index'
 
 	# mount MailFunnel::API => '/'
