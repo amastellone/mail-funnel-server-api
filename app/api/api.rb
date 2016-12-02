@@ -2,10 +2,10 @@ class API < Grape::API
 	prefix 'api'
 	format :json
 
-	puts "DEFAULT VARS:"
-	puts @key
-	puts @secret
-	puts @tokens
+	puts "API LOADED AS /api/"
+	# puts @key
+	# puts @secret
+	# puts @tokens
 
 	def initialize
 		super
