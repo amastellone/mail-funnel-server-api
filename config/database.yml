@@ -1,5 +1,5 @@
 development: &default
-  database: mail-funnel-server
+  database: mail-funnel-server-dev
   adapter: postgresql
   pool: 10
   username: postgres
@@ -7,7 +7,7 @@ development: &default
 
 development:
   <<: *default
-  database: mail-funnel-server
+  database: mail-funnel-server-dev
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -18,4 +18,4 @@ test:
 
 production:
   <<: *default
-  database: mail-funnel-server
+  database: mail-funnel-server-prod
