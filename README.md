@@ -84,9 +84,15 @@ rails s -p 3001
 Ruby on Rails application hosting.
 https://dashboard.heroku.com/
 
+**Travis-CI**
+
+
 **Reviewable.io**
 Merge Review Tool
 https://reviewable.io/reviews#-
+**Review-Ninja Admin:** https://app.review.ninja/
 
 **Sentry.io**
 https://sentry.io/blue-helmet/mail-funnel-client/getting-started/ruby-rails/
+
+**Dependency Security Scanner** - https://www.deppbot.com/repos
