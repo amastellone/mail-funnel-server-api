@@ -1,15 +1,18 @@
 MailFunnelServer::Application.routes.draw do
 
-	# root :to => 'home#index'
-
-	# mount MailFunnel::API => '/'
+	# http://localhost:3001/API/
 	mount API => '/'
 
-  # resources :hooks
-  resources :email_lists
-	resources :email
+
+	# http://localhost:3001/RESOURCE
+
+  resources :email_lists do
+	  # resources :email
+	  resources :emails
+  end
+
+	resources :hooks
   resources :apps
   resources :jobs
-  resources :emails
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
 end
