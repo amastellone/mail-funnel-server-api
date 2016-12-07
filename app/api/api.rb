@@ -8,6 +8,7 @@ class API < Grape::API
 	# puts @tokens
 
 	def initialize
+
 		super
 	end
 
@@ -116,6 +117,8 @@ class API < Grape::API
 
 	# SHOPIFY WEBHOOKS
 
+	# STEP #1
+	# http://localhost:3001/API/install
 	get :install do
 		initvars()
 
