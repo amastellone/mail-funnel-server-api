@@ -1,0 +1,6 @@
+machine:
+  ruby:
+
+test:
+  post:
+    - bundle exec rake test=
