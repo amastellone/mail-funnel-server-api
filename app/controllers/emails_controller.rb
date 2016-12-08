@@ -1,5 +1,6 @@
 class EmailsController < ApplicationController
 	before_action :set_email, only: [:show, :update, :destroy]
+	before_action :set_list, only: [:index]
 
 	# GET /emails
 	def index
@@ -41,6 +42,10 @@ class EmailsController < ApplicationController
 	# Use callbacks to share common setup or constraints between actions.
 	def set_email
 		@email = Email.find(params[:id])
+	end
+
+	def set_list
+		@list = EmailList.find(params[:email_list_id])
 	end
 
 	# Never trust parameters from the scary internet, only allow the white list through.

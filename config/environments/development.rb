@@ -45,7 +45,7 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.debug_exception_response_format = :default
-  # config.debug_exception_response_format = :api
+  # config.debug_exception_response_format = :default
+  config.debug_exception_response_format = :api
 
 end
