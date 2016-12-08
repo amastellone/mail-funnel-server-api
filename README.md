@@ -15,17 +15,21 @@ The purpose of this server is to serve the mail-funnel-client (soon available in
 - A background process (IE: Job / Worker)
 - Worker runs every 5 minutes , iterating through each row in the Jobs table
 - The Worker checks each Job's and evaluates if it should be executed based on this algorithm:
-- 
+
 ```
-	1. Evaluate the Job's "frequency" value and "frequency-value" value. 
-	    1.1 `Frequency:String` = execute_once (default), (currently disabled: execute_twice, execute_thrice)
-		1.2 `Frequency-Value::Integer` (military-style / minutes are multiples of 5) = 0030, 1100, 1345, 2005
-	2 Check the `Executed:Boolean` param, check if job has been executed yet 
-		2.1 (Disabled)'Executed_Count:Integer` param (record how many times it has been executed) 
+1. Evaluate the Job's "frequency" value and "frequency-value" value. 
+   1.1 `Frequency:String` = execute_once (default), (currently disabled: execute_twice, execute_thrice)
+   1.2 `Frequency-Value::Integer` (military-style / minutes are multiples of 5) = 0030, 1100, 1345, 2005
+2 Check the `Executed:Boolean` param, check if job has been executed yet 
+   2.1 (Disabled)'Executed_Count:Integer` param (record how many times it has been executed) 
 ```
+
+### Workers
 - **Job Host** - Worker: Iterates through client Jobs, and sends emails to everybody on list
 - **Crono**: Time based worker - https://github.com/plashchynski/crono
 
+### Mailers / Sendgrid Mailers
+- **Sendgrid-ActionMailer** - https://github.com/eddiezane/sendgrid-actionmailer
 
 ## Development
 - CI Server - https://github.com/travis-ci
