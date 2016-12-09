@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 # API Server
 gem 'rack-cors'
 # gem 'active_model_serializers', '~> 0.10.0' # v0.10.0rc2 already used for Shopify
+gem 'rack-jwt'
 
 gem 'http'
 

@@ -8,6 +8,12 @@ namespace :Bluehelmet do
 		Rake::Task["db:migrate"].invoke
 		Rake::Task["db:schema:load"].invoke
 	end
+	desc "Bundle Mailfunnel"
+	task :seed => :environment do
+		Rake::Task["Bluehelmet:import_wp"].invoke
+		Rake::Task["db:data:load"].invoke
+		Rake::Task["Bluehelmet:convert_projects"].invoke
+	end
 	desc "Seed Articles and Projects"
 	task :seed => :environment do
 		Rake::Task["Bluehelmet:import_wp"].invoke
