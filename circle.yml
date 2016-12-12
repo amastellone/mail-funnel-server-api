@@ -1,6 +1,10 @@
 machine:
   ruby:
-
-test:
-  post:
-    - bundle exec rake test=
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: mail-funnel-server
+# test:
+#   post:
+#     - bundle exec rake test=
