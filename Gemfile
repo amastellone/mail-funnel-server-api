@@ -1,13 +1,21 @@
 source 'https://rubygems.org'
 
-# API Server
+# SERVER
+
+# Security
 gem 'rack-cors'
-# gem 'active_model_serializers', '~> 0.10.0' # v0.10.0rc2 already used for Shopify
+gem 'jwt'
 gem 'rack-jwt'
+# gem 'knock'
+
+# API-Docs
+# gem 'slate-installer'
+# gem 'apipie-rails'
+
+# Spyke
+gem 'spyke'
 
 gem 'http'
-
-gem 'rspec-rails', '~> 3.0.1'
 
 group :test do
 	# gem 'capybara', '~> 2.3.0'
@@ -64,6 +72,7 @@ end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'rspec-rails', '~> 3.0.1'
 end
 
 group :development do

@@ -64,6 +64,11 @@ http://mailfunnel.bluehelmet.io/api/
 
 # Developer Resources
 
+## Rspec Testing
+
+https://github.com/rspec/rspec-rails  
+https://github.com/thoughtbot/factory_girl_rails
+
 ### Testing
 - http://brandonhilkert.com/blog/7-reasons-why-im-sticking-with-minitest-and-fixtures-in-rails/
 - https://github.com/brandonhilkert/sucker_punch#cleaning-test-data-transactions
