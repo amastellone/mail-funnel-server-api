@@ -1,19 +1,12 @@
-#Seeding
+#SERVER - Seeds.rb
 
 
+# Generate Default Data
 execute_initial = true
 if execute_initial == true
 
 	app_create       = App.create(name: "bluehelmet-dev")
 	app              = app_create.id
-
-	# job1 = Job.where()
-
-	# api_key: ENV['API_KEY'],
-	# api_secret: ENV['API_SECRET'],
-	# );
-
-	# Configs.create(name: "")
 
 	# Checkout
 	cart_create_hook = Hook.create(name: 'Cart / Create', identifier: 'cart_create');
@@ -34,54 +27,82 @@ else
 end
 
 
-# Generate default Email_List
+# Bluehelmet App Install
+
+# Default Email-List + Generate Test Emails
 defaultlist = EmailList.create(name:        "Default",
                                description: "The default Mail-Funnel email list",
                                app_id:      app);
+$y = 0
+until $y > Random.rand(7...15) do
+	email = Email.create(email:         Faker::Internet.email,
+	                     name:          Faker::Internet.name,
+	                     app_id:        app,
+	                     email_list_id: defaultlist.id);
+	puts defaultlist.name.to_s + ": Email Created " + email.email.to_s
+	$y += 1
+end
 
+# Generate All Other Test Data
+$x = 0
+until $x > Random.rand(7...15) do
+	list = EmailList.create(name:        "Email List some Name " + $x.to_s,
+	                        description: "A Mail-Funnel email list",
+	                        app_id:      app)
 
-# until $x > Random.rand(3...15) do
-email       = Email.create(email:         Faker::Internet.email,
-                           name:          Faker::Internet.name,
-                           app_id:        app,
-                           email_list_id: defaultlist.id);
-puts defaultlist.name.to_s + ": Email Created " + email.email.to_s
-# end
+	$y = 0
+	until $y > Random.rand(7...15) do
+		email = Email.create(email:         Faker::Internet.email,
+		                     name:          Faker::Internet.name,
+		                     app_id:        app,
+		                     email_list_id: list.id)
+		puts list.name.to_s + ": Email Created " + email.email.to_s
+		$y += 1
+	end
+	$x += 1
+end
 
 
 # GENERATE TEST DATA
 generate_extra_data = true
 if generate_extra_data == true
-
 	puts 'GENERATING EXTRA SEED DATA:'
 
 	$x = 0
-	while $x < 5 do
-		list = EmailList.create(name:        "Main List " + $x.to_s,
-		                        description: "This is a great email list",
-		                        app_id:      app);
+	while $x < 20 do
+		app = App.create(name: "App-Name " + $x.to_s)
 
-		puts "Created List " + list.name.to_s
 		$y = 0
-		while $y > Random.rand(3...15) do
-			email = Email.create(email:         Faker::Internet.email,
-			                     name:          Faker::Internet.name,
-			                     app_id:        app,
-			                     email_list_id: list.id);
-			puts list.name.to_s + ": Email Created " + email.email.to_s
-			$y += 1
+		while $y < 5 do
+			list = EmailList.create(name:        "Main List " + $y.to_s,
+			                        description: "This is a great email list",
+			                        app_id:      app.id)
+
+			puts "Created List " + list.name.to_s
+
+			$z = 0
+			while $z > Random.rand(3...15) do
+				email = Email.create(email:         Faker::Internet.email,
+				                     name:          Faker::Internet.name,
+				                     app_id:        app.id,
+				                     email_list_id: list.id)
+				puts list.name.to_s + ": Email Created " + email.email.to_s
+				$z += 1
+			end
+
+			$y +=1
 		end
+
 		$x +=1
 	end
 
-	thislist = EmailList.all.first
-	$x       = 0
-	while $x < Random.rand(5...20) do
+	$x = 0
+	while $x < Random.rand(10...30) do
 		job = Job.create(frequency:           "execute_once",
 		                 execute_time:        "1330",
 		                 subject:             "Email subject",
 		                 content:             "Email Contents",
-		                 app_id:              app,
+		                 app_id:              app.id,
 		                 campaign_identifier: Hook.offset(rand(Hook.count)).first.id,
 		                 hook_identifier:     Hook.offset(rand(Hook.count)).first.id,
 		                 executed:            false,

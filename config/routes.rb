@@ -6,13 +6,25 @@ MailFunnelServer::Application.routes.draw do
 
 	# http://localhost:3001/RESOURCE
 
-  resources :email_lists do
-	  # resources :email
-	  resources :emails
-  end
+	resources :email_lists do
+		resources :emails
+	end
+
+	resources :emails
 
 	resources :hooks
-  resources :apps
-  resources :jobs
+
+	resources :apps do
+		resources :jobs do
+			resources :email_lists do
+				resources :email
+			end
+		end
+		resources :email_lists do
+			resources :email
+		end
+	end
+
+	resources :jobs
 
 end
