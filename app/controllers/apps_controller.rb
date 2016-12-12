@@ -4,11 +4,13 @@ class AppsController < ApplicationController
 	# GET /apps
 	def index
 		@apps = App.all
+		puts json: @apps
 		render json: @apps
 	end
 
 	# GET /apps/1
 	def show
+		puts json: @apps
 		render json: @app
 	end
 

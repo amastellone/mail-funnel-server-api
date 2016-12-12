@@ -1,5 +1,5 @@
 class Job < ApplicationRecord
-  belongs_to :email_lists
+  has_one :email_lists
   belongs_to :apps
-  belongs_to :hooks
+  has_one :hooks
 end
