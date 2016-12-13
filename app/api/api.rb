@@ -17,6 +17,7 @@ class API < Grape::API
 		def initvars
 			puts 'INITIALIZED CONSTRUCTOR'
 			Dotenv::Railtie.load
+			# FIX: http://www.justinweiss.com/articles/better-globals-with-a-tiny-activesupport-module//
 			# @key      = ENV['APP_KEY']
 			# @secret   = ENV['APP_SECRET']
 			# @appurl   = ENV['APP_URL']
