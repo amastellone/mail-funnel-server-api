@@ -2,6 +2,12 @@ source 'https://rubygems.org'
 
 # SERVER
 
+# gem 'rake', '< 11.1'
+
+# gem 'activerecord-session_store'
+# gem 'request_store_registry', :git => 'git://github.com/mikeantonelli/request_store_registry.git'
+# /vaskaloidis/request_store_registry
+
 # Security
 gem 'rack-cors'
 gem 'jwt'
@@ -14,12 +20,10 @@ gem 'rack-jwt'
 
 # Spyke
 gem 'spyke'
-
 gem 'http'
 
-group :test do
-	# gem 'capybara', '~> 2.3.0'
-end
+# Seeding Data Generator
+gem 'faker'
 
 # REST ORM
 # gem 'her'
@@ -51,6 +55,9 @@ gem 'pg'
 # WEB SERVER
 gem 'puma', '~> 3.0'
 
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -65,27 +72,39 @@ gem 'puma', '~> 3.0'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :production do
-  gem 'rollbar'
+group :test do
+	# gem 'capybara', '~> 2.3.0'
 end
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platform: :mri
-  gem 'rspec-rails', '~> 3.0.1'
+	# Call 'byebug' anywhere in the code to stop execution and get a debugger console
+	gem 'byebug', platform: :mri
+
+	%w[rspec rspec-core rspec-expectations rspec-rails rspec-mocks rspec-support].each do |lib|
+		gem lib, :git => "git://github.com/rspec/#{lib}.git", :branch => 'master'
+	end
+
+	# gem 'rspec-rails'
+
+
 end
 
 group :development do
-  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  # gem 'web-console'
-  gem 'listen', '~> 3.0.5'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'table_print'
-  gem 'pry-rails'
-  gem 'faker'
+	# Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
+	# gem 'web-console'
+	gem 'listen', '~> 3.0.5'
+	# Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+	gem 'spring'
+	gem 'spring-watcher-listen', '~> 2.0.0'
+	gem 'table_print'
+	gem 'pry-rails'
+
+	gem 'table_print'
+	gem 'pry-rails'
+	gem 'meta_request'
+	# gem 'quiet_assets'
 end
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+group :production do
+	gem 'rollbar'
+end

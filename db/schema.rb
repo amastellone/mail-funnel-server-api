@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161212010929) do
+ActiveRecord::Schema.define(version: 20161213035233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20161212010929) do
     t.datetime "created_at",   :null=>false
     t.datetime "updated_at",   :null=>false
     t.boolean  "builder_lock", :default=>false
+    t.string   "auth_token",   :index=>{:name=>"index_apps_on_auth_token", :unique=>true, :using=>:btree}
   end
 
   create_table "configs", force: :cascade do |t|
@@ -56,20 +57,18 @@ ActiveRecord::Schema.define(version: 20161212010929) do
   end
 
   create_table "jobs", force: :cascade do |t|
-    t.string   "frequency"
     t.string   "subject"
     t.text     "content"
     t.datetime "created_at",          :null=>false
     t.datetime "updated_at",          :null=>false
     t.integer  "email_list_id",       :foreign_key=>{:references=>"email_lists", :name=>"fk_jobs_email_list_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__jobs_email_list_id", :using=>:btree}
     t.integer  "app_id",              :foreign_key=>{:references=>"apps", :name=>"fk_jobs_app_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__jobs_app_id", :using=>:btree}
-    t.float    "x"
-    t.float    "y"
     t.integer  "client_campaign"
     t.string   "campaign_identifier"
     t.boolean  "executed"
     t.integer  "execute_time"
     t.string   "hook_identifier"
+    t.string   "execute_frequency"
   end
 
   create_table "shops", force: :cascade do |t|

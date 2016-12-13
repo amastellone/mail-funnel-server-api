@@ -5,6 +5,8 @@
 execute_initial = true
 if execute_initial == true
 
+	test_app         = App.create(name: "bluehelmet-client-rspec-test-app")
+
 	app_create       = App.create(name: "bluehelmet-dev")
 	app              = app_create.id
 
