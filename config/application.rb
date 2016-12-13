@@ -24,14 +24,9 @@ module MailFunnelServer
   class Application < Rails::Application
     config.api_only = true
 
-    # ActiveModelSerializers.config.adapter = ActiveModelSerializers::Adapter::JsonApi
+    ActiveModelSerializers.config.adapter = ActiveModelSerializers::Adapter::JsonApi
     # ActiveModelSerializers.config.adapter = :json_api
     # ActiveModelSerializers.config.adapter = :json
-    # ActiveModel::Serializer.config.adapter = ActiveModel::Serializer::Adapter::JsonApi
-
-    ActiveModel::Serializer.config.adapter = :json_api
-    # ActiveModel::Serializer.config.adapter = ActiveModelSerializers::Adapter::JsonApi.new
-
 
     # Rails.application.config.middleware.use, Rack::JWT::Auth, my_args
 
