@@ -24,30 +24,47 @@ module MailFunnelServer
   class Application < Rails::Application
     config.api_only = true
 
+    # JSON API Format
     ActiveModelSerializers.config.adapter = ActiveModelSerializers::Adapter::JsonApi
     # ActiveModelSerializers.config.adapter = :json_api
     # ActiveModelSerializers.config.adapter = :json
 
-    # Rails.application.config.middleware.use, Rack::JWT::Auth, my_args
-
-    # Lib
+    # Add Paths to Autoload
+    # Lib and Middleware
     config.autoload_paths << "#{Rails.root}/lib"
-    config.autoload_paths << Rails.root.join('lib')
     config.autoload_paths << "#{Rails.root}/app/middleware"
-    config.paths.add 'app/api', glob: 'lib/*.rb'
-
-
-    # config.action_dispatch.default_headers['P3P'] = 'CP="Not used"'
-    # config.action_dispatch.default_headers.delete('X-Frame-Options')
-
-    # GRAPE
+    # GRAPE API
     config.paths.add 'app/api', glob: '**/*.rb'
     config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
 
+    config.generators do |g|
+	    g.orm :active_record
+
+	    g.factory_girl false
+	    g.test_framework :rspec
+	    g.test_framework :test_unit, fixture: true
+	    # g.test_framework :test_unit, fixture: false
+
+	    g.template_engine :erb
+	    g.stylesheets true
+	    g.javascripts true
+    end
+
+    # Headers
+    # config.action_dispatch.default_headers['P3P'] = 'CP="Not used"'
+    # config.action_dispatch.default_headers.delete('X-Frame-Options')
+
+    # TODO: Move some of this stuff out to /config/initializers
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Middleware
+
+    # JSON Web Tokens (TODO: Add JWT to Headers, in middleware)
+    # Rails.application.config.middleware.use, Rack::JWT::Auth, my_args
+
+    #Cors
     config.middleware.insert_before 0, Rack::Cors do
 	    allow do
 		    origins '*'
