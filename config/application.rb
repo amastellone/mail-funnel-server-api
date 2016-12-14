@@ -40,14 +40,14 @@ module MailFunnelServer
     config.generators do |g|
 	    g.orm :active_record
 
-	    g.factory_girl false
+	    g.factory_girl true
 	    g.test_framework :rspec
-	    g.test_framework :test_unit, fixture: true
+	    # g.test_framework :test_unit, fixture: true
 	    # g.test_framework :test_unit, fixture: false
 
 	    g.template_engine :erb
-	    g.stylesheets true
-	    g.javascripts true
+	    g.stylesheets false
+	    g.javascripts false
     end
 
     # Headers
