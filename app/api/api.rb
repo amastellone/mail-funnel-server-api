@@ -4,8 +4,15 @@ class API < Grape::API
 
 	puts "API LOADED AS /api/"
 	# puts @key
-	# puts @secret
+	# puts session[:api_secret]
 	# puts @tokens
+
+	session[:api_key] 			= ENV['APP_KEY']
+	session[:api_secret] 		= ENV['APP_SECRET']
+	session[:api_url] 			= ENV['APP_URL']
+	session[:api_key] 			= ENV['APP_KEY']
+	session[:app_name] 			= ENV['APP_NAME']
+	session[:api_scope] 		= ENV['APP_SCOPE']
 
 	def initialize
 
@@ -19,18 +26,18 @@ class API < Grape::API
 			Dotenv::Railtie.load
 			# FIX: http://www.justinweiss.com/articles/better-globals-with-a-tiny-activesupport-module//
 			# @key      = ENV['APP_KEY']
-			# @secret   = ENV['APP_SECRET']
+			# session[:api_secret]   = ENV['APP_SECRET']
 			# @appurl   = ENV['APP_URL']
-			@key      = "84990ccf831cea238324340d512307d"
-			@secret   = "18fb76db454fd01af035ebed69af51b6"
-			@appurl   = "http://e90ef07a.ngrok.io/api/"
-			@appname  = "mailfunnel-server"
-			@appscope = ENV['APP_SCOPE']
+			# @key      = "84990ccf831cea238324340d512307d"
+			# session[:api_secret]   = "18fb76db454fd01af035ebed69af51b6"
+			# @appurl   = "http://e90ef07a.ngrok.io/api/"
+			# @appname  = "mailfunnel-server"
+			# @appscope = ENV['APP_SCOPE']
 			@tokens   = {}
 
 			puts "HELPER VARS:"
 			puts @key
-			puts @secret
+			puts session[:api_secret]
 			puts @tokens
 		end
 
@@ -73,7 +80,7 @@ class API < Grape::API
 		def validate_hmac(hmac, request)
 			h      = params.reject { |k, _| k == 'hmac' || k == 'signature' }
 			query  = URI.escape(h.sort.collect { |k, v| "#{k}=#{v}" }.join('&'))
-			digest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), @secret, query)
+			digest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), session[:api_secret], query)
 
 			unless (hmac == digest)
 				return [403, "Authentication failed. Digest provided was: #{digest}"]
@@ -82,23 +89,24 @@ class API < Grape::API
 
 		def verify_webhook(hmac, data)
 			digest          = OpenSSL::Digest.new('sha256')
-			calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, @secret, data)).strip
+			calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, session[:api_secret], data)).strip
 
 			hmac == calculated_hmac
 		end
 
-		def bulk_edit_url
-			bulk_edit_url = "https://www.shopify.com/admin/bulk"\
-                    "?resource_name=ProductVariant"\
-                    "&edit=metafields.test.ingredients:string"
-			return bulk_edit_url
-		end
+		# def bulk_edit_url
+		# 	bulk_edit_url = "https://www.shopify.com/admin/bulk"\
+  #                   "?resource_name=ProductVariant"\
+  #                   "&edit=metafields.test.ingredients:string"
+		# 	return bulk_edit_url
+		# end
 
 		def create_all_webhooks
 			create_order_webhook
 		end
 
 		def create_order_webhook
+			@appurl = session[:api_url]
 			# create webhook for order creation if it doesn't exist
 			unless ShopifyAPI::Webhook.find(:all).any?
 				webhook = {
@@ -128,11 +136,13 @@ class API < Grape::API
 		shop   = params[:shop]
 		scopes = "read_orders,read_products"
 
-		puts "INSTALL KEY VARIABLE:"
-		puts @key
+		@key 	= session[:api_key]
+		@secret = session[:api_secret]
+		@appurl = session[:api_url]
+
 
 		# construct the installation URL and redirect the merchant
-		install_url = "http://#{shop}/admin/oauth/authorize?client_id=#{@key}"\
+		install_url = "http://#{shop}/admin/oauth/authorize?client_id=#{@secret}"\
                 "&scope=#{scopes}&redirect_uri=#{@appurl}auth"
 
 		# redirect to the install_url
@@ -152,7 +162,7 @@ class API < Grape::API
 
 		# if no access token for this particular shop exist,
 		# POST the OAuth request and receive the token in the response
-		get_shop_access_token(shop, @key, @secret, code)
+		get_shop_access_token(shop, session[:api_key], session[:api_secret], code)
 
 		# create webhook for order creation if it doesn't exist
 		create_all_webhooks
@@ -207,7 +217,7 @@ class API < Grape::API
 						items.each do |item|
 							item = ShopifyAPI::Variant.find(item)
 
-							session = ShopifyAPI::Session.setup({ :api_key => @key, :secret => @secret })
+							session = ShopifyAPI::Session.setup({ :api_key => session[:api_key], :secret => session[:api_secret] })
 							# Get Item ID
 							# Get Store that item belongs to
 							# Check if hook exists for store
