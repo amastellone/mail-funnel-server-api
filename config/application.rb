@@ -30,6 +30,12 @@ module MailFunnelServer
 
     # Rails.application.config.middleware.use, Rack::JWT::Auth, my_args
 
+    # Lib
+    config.autoload_paths << "#{Rails.root}/lib"
+    config.autoload_paths << Rails.root.join('lib')
+    config.autoload_paths << "#{Rails.root}/app/middleware"
+    config.paths.add 'app/api', glob: 'lib/*.rb'
+
 
     # config.action_dispatch.default_headers['P3P'] = 'CP="Not used"'
     # config.action_dispatch.default_headers.delete('X-Frame-Options')

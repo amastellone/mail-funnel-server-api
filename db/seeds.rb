@@ -100,10 +100,11 @@ if generate_extra_data == true
 
 	$x = 0
 	while $x < Random.rand(10...30) do
-		job = Job.create(frequency:           "execute_once",
+		job = Job.create(execute_frequency:   "execute_once",
 		                 execute_time:        "1330",
 		                 subject:             "Email subject",
 		                 content:             "Email Contents",
+		                 name:                Faker::Commerce.product_name,
 		                 app_id:              app.id,
 		                 campaign_identifier: Hook.offset(rand(Hook.count)).first.id,
 		                 hook_identifier:     Hook.offset(rand(Hook.count)).first.id,
