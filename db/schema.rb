@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161213233817) do
+ActiveRecord::Schema.define(version: 20161214015151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,11 @@ ActiveRecord::Schema.define(version: 20161213233817) do
     t.string   "hook_identifier"
     t.string   "execute_frequency"
     t.string   "name"
+  end
+
+  create_table "mf_server_config", force: :cascade do |t|
+    t.string "name",  :index=>{:name=>"index_mf_server_config_on_name", :using=>:btree}
+    t.string "value"
   end
 
   create_table "shops", force: :cascade do |t|
