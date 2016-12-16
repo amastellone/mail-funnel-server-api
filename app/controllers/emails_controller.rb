@@ -44,12 +44,13 @@ class EmailsController < ApplicationController
 		@email = Email.find(params[:id])
 	end
 
-	def set_list
-		@list = EmailList.find(params[:email_list_id])
-	end
+	# def set_list
+	# 	@list = EmailList.find(params[:email_list_id])
+	# end
 
 	# Never trust parameters from the scary internet, only allow the white list through.
 	def email_params
-		params.require(:email).permit(:email, :name, :email_list_id, :app_id)
+		# TODO: Implement a require(:email). requirement
+		params.permit(:email, :app_id, :name, :email_list_id)
 	end
 end

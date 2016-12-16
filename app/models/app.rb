@@ -1,6 +1,5 @@
 class App < ApplicationRecord
-	validates_uniqueness_of :name
-  validates_presence_of :name
+	validates :name, presence: { strict: true }
 
 
 	has_many :jobs

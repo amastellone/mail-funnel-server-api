@@ -11,13 +11,6 @@ server_url = ENV['APP_URL']
 MailFunnelServerConfig.create(name: "app_url", value: server_url)
 MailFunnelServerConfig.create(name: "api_url", value: server_url + "api/")
 
-# Generate Default Data
-test_app_create  = App.create(name: "bluehelmet-client-rspec-test-app")
-test_app         = test_app_create.id
-
-app_create       = App.create(name: "bluehelmet-dev")
-app              = app_create.id
-
 # Checkout
 cart_create_hook = Hook.create(name: 'Cart / Create', identifier: 'cart_create');
 cart_update_hook = Hook.create(name: 'Cart / Update', identifier: 'cart_update');
@@ -31,23 +24,44 @@ checkout_update_hook = Hook.create(name: 'Checkout / Update', identifier: 'check
 order_create_hook    = Hook.create(name: 'Order / Create', identifier: 'order_create');
 order_update_hook = Hook.create(name: 'Order / Update', identifier: 'order_update');
 
-# app_create = App.where(name: "bluehelmet-dev").first
-# app        = app_create.id
+generate_client_data = false
 
+# GENERATE OUR DEFAULT DATA
+# TODO: Move this to client-install
+if generate_client_data
 
-# OUR DEFAULT DATA - TODO: Move this to client-install
-defaultlist       = EmailList.create(name:        "Default",
-                                     description: "The default Mail-Funnel email list",
-                                     app_id:      app);
-# Generte OUR Test Data for Default data
-$y                = 0
-until $y > Random.rand(1...5) do
-	email = Email.create(email:         Faker::Internet.email,
-	                     name:          Faker::Internet.name,
-	                     app_id:        app,
-	                     email_list_id: defaultlist.id);
-	puts defaultlist.name.to_s + ": Email Created " + email.email.to_s
-	$y += 1
+	app_create       = App.new(name: "bluehelmet-dev")
+	if app_create.new_record?
+		app_create.save!
+		puts "App did not exist, created with id: " + app.id.to_s
+	else
+		puts "App exists already"
+	end
+
+	app              = app_create.id
+
+	# app_create = App.where(name: "bluehelmet-dev").first
+	# app        = app_create.id
+	defaultlist       = EmailList.new(name:        "Default",
+	                                     description: "The default Mail-Funnel email list",
+	                                     app_id:      app);
+
+	if defaultlist.new_record?
+		puts "Default list does not exist, create it"
+		defaultlist.save!
+	else
+		puts "Default list exists already"
+	end
+
+	$y                = 0
+	until $y > Random.rand(1...5) do
+		email = Email.create(email:         Faker::Internet.email,
+		                     name:          Faker::Name.name,
+		                     app_id:        app,
+		                     email_list_id: defaultlist.id);
+		puts defaultlist.name.to_s + ": Email Created " + email.email.to_s
+		$y += 1
+	end
 end
 
 # OUR OTHER Data
@@ -60,7 +74,7 @@ until $x > Random.rand(2...3) do
 	$y = 0
 	until $y > Random.rand(1...10) do
 		email = Email.create(email:         Faker::Internet.email,
-		                     name:          Faker::Internet.name,
+		                     name:          Faker::Name.name,
 		                     app_id:        app,
 		                     email_list_id: list.id)
 		puts list.name.to_s + ": Email Created " + email.email.to_s
@@ -68,23 +82,25 @@ until $x > Random.rand(2...3) do
 	end
 	$x += 1
 end
-
-Hook.all.find_each do |thishook|
-	$x = 0
-	while $x <= 4 do
-		job = Job.create(execute_frequency:   "execute_once",
-		                 execute_time:        "1330",
-		                 subject:             "Email subject",
-		                 content:             "Email Contents",
-		                 name:                Faker::Commerce.product_name,
-		                 app_id:              app,
-		                 campaign_identifier: thishook.identifier,
-		                 hook_identifier:     thishook.identifier,
-		                 executed:            false,
-		                 email_list_id:       EmailList.offset(rand(EmailList.count)).first
-		)
-		puts "OURS: Job Created for " + job.hook_identifier.to_s
-		$x += 1
+generate_jobs = false
+if generate_jobs
+	Hook.all.find_each do |thishook|
+		$x = 0
+		while $x <= 4 do
+			job = Job.create(execute_frequency:   "execute_once",
+			                 execute_time:        "1330",
+			                 subject:             "Email subject",
+			                 content:             "Email Contents",
+			                 name:                Faker::Commerce.product_name,
+			                 app_id:              app,
+			                 campaign_identifier: thishook.identifier,
+			                 hook_identifier:     thishook.identifier,
+			                 executed:            false,
+			                 email_list_id:       EmailList.offset(rand(EmailList.count)).first
+			)
+			puts "OURS: Job Created for " + job.hook_identifier.to_s
+			$x += 1
+		end
 	end
 end
 
@@ -127,7 +143,7 @@ while $x < Random.rand(10...30) do
 	                 subject:             "Email subject",
 	                 content:             "Email Contents",
 	                 name:                Faker::Commerce.product_name,
-	                 app_id:              app.id,
+	                 app_id:              App.offset(rand(App.count)).first.id,
 	                 campaign_identifier: Hook.offset(rand(Hook.count)).first.identifier,
 	                 hook_identifier:     Hook.offset(rand(Hook.count)).first.identifier,
 	                 executed:            false,

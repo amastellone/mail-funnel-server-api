@@ -18,8 +18,6 @@ gem 'rack-jwt'
 # gem 'slate-installer'
 # gem 'apipie-rails'
 
-# Spyke
-gem 'spyke'
 gem 'http'
 
 # Seeding Data Generator
