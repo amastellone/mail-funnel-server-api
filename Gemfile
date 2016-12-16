@@ -109,5 +109,6 @@ group :development do
 end
 
 group :production do
+	gem 'scout_apm'
 	gem 'rollbar'
 end

@@ -288,6 +288,7 @@ GEM
       activerecord (>= 4.2, < 5.1)
       its-it (~> 1.2)
       schema_plus_core
+    scout_apm (2.1.17)
     shopify_api (4.3.3)
       activeresource (>= 3.0.0)
       rack
@@ -367,6 +368,7 @@ DEPENDENCIES
   rspec-rails!
   rspec-support!
   schema_auto_foreign_keys
+  scout_apm
   shopify_api
   spring
   spring-commands-rspec
