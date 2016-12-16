@@ -64,7 +64,7 @@ if generate_client_data
 	end
 end
 
-# OUR OTHER Data
+# GENERATE OUR OTHER Data
 $x = 0
 until $x > Random.rand(2...3) do
 	list = EmailList.create(name:        "Email List some Name " + $x.to_s,
@@ -82,7 +82,7 @@ until $x > Random.rand(2...3) do
 	end
 	$x += 1
 end
-generate_jobs = false
+generate_jobs = false # TODO: DELETE this - its made on the client now
 if generate_jobs
 	Hook.all.find_each do |thishook|
 		$x = 0

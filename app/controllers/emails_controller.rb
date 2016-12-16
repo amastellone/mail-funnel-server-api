@@ -51,6 +51,6 @@ class EmailsController < ApplicationController
 	# Never trust parameters from the scary internet, only allow the white list through.
 	def email_params
 		# TODO: Implement a require(:email). requirement
-		params.permit(:email, :app_id, :name, :email_list_id)
+		# params.require(:email).permit(:email, :name, :email_list_id, :app_id)
 	end
 end
