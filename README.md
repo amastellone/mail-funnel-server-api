@@ -1,6 +1,14 @@
 # Mail-Funnel-Server API
 Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cron-Job Worker.
 
+### App Store Config
+Development - .env (Assuming you are running NGrok)
+```
+# Server - Shopify API URL's
+APP_URL=http://5b5283bb.ngrok.io/api/install
+REDIRECTION_URL=http://5b5283bb.ngrok.io/api/auth
+```
+
 ## Server-Features
 The purpose of this server is to serve the mail-funnel-client (soon available in app-store) with the following services: Shopify Webhooks, REST CRUD JSON Web-Services and a Ruby background-job worker.
 
