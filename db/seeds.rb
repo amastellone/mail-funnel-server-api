@@ -1,18 +1,20 @@
 #SERVER - Seeds.rb
 
 # Config
-# MfServerConfig.create(name: "app_name", value: ENV["APP_NAME"])
-# MfServerConfig.create(name: "app_key", value: ENV["APP_KEY"])
-# MfServerConfig.create(name: "app_secret", value: ENV["APP_SECRET"])
-# MfServerConfig.create(name: "app_scope", value: ENV["APP_SCOPE"])
+MailFunnelServerConfig.create(name: "app_name", value: ENV["APP_NAME"])
+MailFunnelServerConfig.create(name: "app_key", value: ENV["APP_KEY"])
+MailFunnelServerConfig.create(name: "app_secret", value: ENV["APP_SECRET"])
+MailFunnelServerConfig.create(name: "app_scope", value: ENV["APP_SCOPE"])
 #
 # server_url = "http://localhost:3001/"
-# MfServerConfig.create(name: "server", value: server_url)
-# MfServerConfig.create(name: "app_url", value: server_url + "api/")
+server_url = ENV['APP_URL']
+MailFunnelServerConfig.create(name: "app_url", value: server_url)
+MailFunnelServerConfig.create(name: "api_url", value: server_url + "api/")
 
 # Generate Default Data
 test_app_create  = App.create(name: "bluehelmet-client-rspec-test-app")
 test_app         = test_app_create.id
+
 app_create       = App.create(name: "bluehelmet-dev")
 app              = app_create.id
 
@@ -33,7 +35,7 @@ order_update_hook = Hook.create(name: 'Order / Update', identifier: 'order_updat
 # app        = app_create.id
 
 
-# Generate Default Data
+# OUR DEFAULT DATA - TODO: Move this to client-install
 defaultlist       = EmailList.create(name:        "Default",
                                      description: "The default Mail-Funnel email list",
                                      app_id:      app);
@@ -48,7 +50,7 @@ until $y > Random.rand(1...5) do
 	$y += 1
 end
 
-# Generate OUT All Other Test Data
+# OUR OTHER Data
 $x = 0
 until $x > Random.rand(2...3) do
 	list = EmailList.create(name:        "Email List some Name " + $x.to_s,
@@ -66,31 +68,33 @@ until $x > Random.rand(2...3) do
 	end
 	$x += 1
 end
-$x = 0
+
 Hook.all.find_each do |thishook|
-	while $x < Random.rand(1...3) do
+	$x = 0
+	while $x <= 4 do
 		job = Job.create(execute_frequency:   "execute_once",
 		                 execute_time:        "1330",
 		                 subject:             "Email subject",
 		                 content:             "Email Contents",
 		                 name:                Faker::Commerce.product_name,
 		                 app_id:              app,
-		                 campaign_identifier: thishook.id,
-		                 hook_identifier:     thishook.id,
+		                 campaign_identifier: thishook.identifier,
+		                 hook_identifier:     thishook.identifier,
 		                 executed:            false,
 		                 email_list_id:       EmailList.offset(rand(EmailList.count)).first
 		)
-		puts "Job Created for " + job.hook_identifier.to_s
+		puts "OURS: Job Created for " + job.hook_identifier.to_s
 		$x += 1
 	end
 end
 
-# GENERATE TEST DATA
+# TEST DATA
 puts 'GENERATING EXTRA SEED DATA:'
 
 $x = 0
 while $x < 20 do
 	app = App.create(name: "App-Name " + $x.to_s)
+	puts "Created App Name: " + app.name + " - " + $x.to_s
 
 	$y = 0
 	while $y < 5 do
@@ -124,8 +128,8 @@ while $x < Random.rand(10...30) do
 	                 content:             "Email Contents",
 	                 name:                Faker::Commerce.product_name,
 	                 app_id:              app.id,
-	                 campaign_identifier: Hook.offset(rand(Hook.count)).first.id,
-	                 hook_identifier:     Hook.offset(rand(Hook.count)).first.id,
+	                 campaign_identifier: Hook.offset(rand(Hook.count)).first.identifier,
+	                 hook_identifier:     Hook.offset(rand(Hook.count)).first.identifier,
 	                 executed:            false,
 	                 email_list_id:       EmailList.offset(rand(EmailList.count)).first
 	)

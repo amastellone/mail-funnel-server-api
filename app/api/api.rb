@@ -3,16 +3,17 @@ class API < Grape::API
 	format :json
 
 	puts "API LOADED AS /api/"
+	puts 
 	# puts @key
 	# puts session[:api_secret]
 	# puts @tokens
 
-	session[:api_key] 			= ENV['APP_KEY']
-	session[:api_secret] 		= ENV['APP_SECRET']
-	session[:api_url] 			= ENV['APP_URL']
-	session[:api_key] 			= ENV['APP_KEY']
-	session[:app_name] 			= ENV['APP_NAME']
-	session[:api_scope] 		= ENV['APP_SCOPE']
+	# Set everything in sessions
+	# session[:api_key] 			= ENV['APP_KEY']
+	# session[:api_secret] 			= ENV['APP_SECRET']
+	# session[:api_url] 			= ENV['APP_URL']
+	# session[:app_name] 			= ENV['APP_NAME']
+	# session[:api_scope] 			= ENV['APP_SCOPE']
 
 	def initialize
 
@@ -24,20 +25,7 @@ class API < Grape::API
 		def initvars
 			puts 'INITIALIZED CONSTRUCTOR'
 			Dotenv::Railtie.load
-			# FIX: http://www.justinweiss.com/articles/better-globals-with-a-tiny-activesupport-module//
-			# @key      = ENV['APP_KEY']
-			# session[:api_secret]   = ENV['APP_SECRET']
-			# @appurl   = ENV['APP_URL']
-			# @key      = "84990ccf831cea238324340d512307d"
-			# session[:api_secret]   = "18fb76db454fd01af035ebed69af51b6"
-			# @appurl   = "http://e90ef07a.ngrok.io/api/"
-			# @appname  = "mailfunnel-server"
-			# @appscope = ENV['APP_SCOPE']
 			@tokens   = {}
-
-			puts "HELPER VARS:"
-			puts @key
-			puts session[:api_secret]
 			puts @tokens
 		end
 
@@ -78,9 +66,11 @@ class API < Grape::API
 		end
 
 		def validate_hmac(hmac, request)
+			# TODO: Replicate this with JWT Token Key
+			app_secret = MailFunnelServerConfig.where(name: 'app_key').first.value
 			h      = params.reject { |k, _| k == 'hmac' || k == 'signature' }
 			query  = URI.escape(h.sort.collect { |k, v| "#{k}=#{v}" }.join('&'))
-			digest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), session[:api_secret], query)
+			digest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), app_secret, query)
 
 			unless (hmac == digest)
 				return [403, "Authentication failed. Digest provided was: #{digest}"]
@@ -88,8 +78,9 @@ class API < Grape::API
 		end
 
 		def verify_webhook(hmac, data)
+			app_secret = MailFunnelServerConfig.where(name: 'app_key').first.value
 			digest          = OpenSSL::Digest.new('sha256')
-			calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, session[:api_secret], data)).strip
+			calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, app_secret, data)).strip
 
 			hmac == calculated_hmac
 		end
@@ -106,12 +97,12 @@ class API < Grape::API
 		end
 
 		def create_order_webhook
-			@appurl = session[:api_url]
+			app_url = MailFunnelServerConfig.where(name: 'api_url').first.value
 			# create webhook for order creation if it doesn't exist
 			unless ShopifyAPI::Webhook.find(:all).any?
 				webhook = {
 					 topic:   'cart/create',
-					 address: "#{@appurl}cart/create",
+					 address: "#{app_url}cart/create",
 					 format:  'json' }
 
 				ShopifyAPI::Webhook.create(webhook)
@@ -134,16 +125,16 @@ class API < Grape::API
 		add_app(params[:shop])
 
 		shop   = params[:shop]
-		scopes = "read_orders,read_products"
+		app_scope = MailFunnelServerConfig.where(name: 'app_scope').first.value
 
-		@key 	= session[:api_key]
-		@secret = session[:api_secret]
-		@appurl = session[:api_url]
+		app_key 	= MailFunnelServerConfig.where(name: 'app_key').first.value
+		app_secret = MailFunnelServerConfig.where(name: 'app_key').first.value
+		app_url = MailFunnelServerConfig.where(name: 'app_url').first.value
 
 
 		# construct the installation URL and redirect the merchant
-		install_url = "http://#{shop}/admin/oauth/authorize?client_id=#{@secret}"\
-                "&scope=#{scopes}&redirect_uri=#{@appurl}auth"
+		install_url = "http://#{shop}/admin/oauth/authorize?client_id=#{app_secret}"\
+                "&scope=#{app_scope}&redirect_uri=#{api_url}auth"
 
 		# redirect to the install_url
 		redirect install_url
@@ -157,12 +148,15 @@ class API < Grape::API
 		code = params[:code]
 		hmac = params[:hmac]
 
+		app_key = MailFunnelServerConfig.where(name: 'app_key').first.value
+		app_secret = MailFunnelServerConfig.where(name: 'app_secret').first.value
+
 		# perform hmac validation to determine if the request is coming from Shopify
 		validate_hmac(hmac, request)
 
 		# if no access token for this particular shop exist,
 		# POST the OAuth request and receive the token in the response
-		get_shop_access_token(shop, session[:api_key], session[:api_secret], code)
+		get_shop_access_token(shop, app_key, app_secret, code)
 
 		# create webhook for order creation if it doesn't exist
 		create_all_webhooks
@@ -178,6 +172,9 @@ class API < Grape::API
 			email = params[:email]
 			code  = params[:code]
 			hmac  = params[:hmac]
+
+			app_key = MailFunnelServerConfig.where(name: 'app_key').first.value
+			app_secret = MailFunnelServerConfig.where(name: 'app_secret').first.value
 
 			hmac = request.env['HTTP_X_SHOPIFY_HMAC_SHA256']
 
@@ -217,7 +214,7 @@ class API < Grape::API
 						items.each do |item|
 							item = ShopifyAPI::Variant.find(item)
 
-							session = ShopifyAPI::Session.setup({ :api_key => session[:api_key], :secret => session[:api_secret] })
+							session = ShopifyAPI::Session.setup({ :api_key => app_key, :secret => api_secret })
 							# Get Item ID
 							# Get Store that item belongs to
 							# Check if hook exists for store

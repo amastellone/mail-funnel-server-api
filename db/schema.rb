@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161214015151) do
+ActiveRecord::Schema.define(version: 20161216154207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,13 @@ ActiveRecord::Schema.define(version: 20161214015151) do
     t.string   "hook_identifier"
     t.string   "execute_frequency"
     t.string   "name"
+  end
+
+  create_table "mail_funnel_server_configs", force: :cascade do |t|
+    t.string   "name"
+    t.string   "value"
+    t.datetime "created_at", :null=>false
+    t.datetime "updated_at", :null=>false
   end
 
   create_table "mf_server_config", force: :cascade do |t|
