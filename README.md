@@ -1,14 +1,6 @@
 # Mail-Funnel-Server API
 Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cron-Job Worker.
 
-### App Store Config
-Development - .env (Assuming you are running NGrok)
-```
-# Server - Shopify API URL's
-APP_URL=http://5b5283bb.ngrok.io/api/install
-REDIRECTION_URL=http://5b5283bb.ngrok.io/api/auth
-```
-
 ## Server-Features
 The purpose of this server is to serve the mail-funnel-client (soon available in app-store) with the following services: Shopify Webhooks, REST CRUD JSON Web-Services and a Ruby background-job worker.
 
@@ -18,6 +10,14 @@ The purpose of this server is to serve the mail-funnel-client (soon available in
 ### REST JSON Web-Services
 - REST Web-Service JSON API that serves CRUD operations for 
 - Security: https://www.codeschool.com/blog/2014/02/03/token-based-authentication-rails/
+
+### Sends emails using SendGrid
+**Possible Rails Libraries:**  
+- https://github.com/stephenb/sendgrid  
+- https://github.com/PavelTyk/sendgrid-rails  
+- https://devcenter.heroku.com/articles/sendgrid  
+- Config ActionMailer to use Sendgrid - https://sendgrid.com/docs/Integrate/Frameworks/rubyonrails.html  
+- Sendgrid Ruby Lib - https://sendgrid.com/docs/Integrate/Code_Examples/v2_Mail/ruby.html
 
 ### Background-Jobs Worker
 - A background process (IE: Job / Worker)
@@ -31,6 +31,12 @@ The purpose of this server is to serve the mail-funnel-client (soon available in
 2 Check the `Executed:Boolean` param, check if job has been executed yet 
    2.1 (Disabled)'Executed_Count:Integer` param (record how many times it has been executed) 
 ```
+**Libraries for Background-Jobs (Being Evaluated):**  
+- Delayed Job - In Shopify CEO Github account (Programmer) https://github.com/tobi/delayed_job  
+- Delayed Job (**GOOD**) https://github.com/collectiveidea/delayed_job (Built From Shopify Source Code), it can send emails using its mailer - but we may need it to send emails using a 3rd party API Service instead  
+- Sideqik + ActiveJob - https://github.com/mperham/sidekiq/wiki/Active+Job  
+- Sucker Punch - A Ruby Async Concurrent processing library (Influenced by Sideqik and Girl_Friday) - Executes jobs in future (But, Because data stored in memory), its not recomended for a lot of mission-critical jobs because a process restart loses all future jobs 
+
 
 ### Workers
 - **Job Host** - Worker: Iterates through client Jobs, and sends emails to everybody on list
