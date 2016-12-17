@@ -1,5 +1,6 @@
 machine:
-  ruby: ruby 2.3.1p112
+  ruby: 
+    version: 2.3.1p112
 test:
   override:
     - echo "Skipping Tests (For now, until somebody can clean them up)"
