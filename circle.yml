@@ -8,3 +8,6 @@ deployment:
 # test:
 #   post:
 #     - bundle exec rake test=
+test:
+  override:
+    - echo "Skipping Tests (For now, until somebody can clean them up)"
