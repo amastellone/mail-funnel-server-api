@@ -1,10 +1,10 @@
-machine:
-  ruby: 
-    version: 2.3.1p112
 test:
   override:
     - echo "Skipping Tests (For now, until somebody can clean them up)"
-
+# VERSION
+# machine:
+#   ruby: 
+#     version: 2.3.1p112
 # ## TESTING
 # test:
 #   override:
