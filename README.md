@@ -1,4 +1,6 @@
 # Mail-Funnel-Server API
+[![Coverage Status](https://coveralls.io/repos/github/vaskaloidis/mail-funnel-server-api/badge.svg?branch=master)](https://coveralls.io/github/vaskaloidis/mail-funnel-server-api?branch=master)
+
 Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cron-Job Worker.
 
 ## Server-Features
@@ -21,6 +23,10 @@ The purpose of this server is to serve the mail-funnel-client (soon available in
 
 ### Background-Jobs Worker
 - A background process (IE: Job / Worker)
+- We use **Heroku Scheduler:** https://devcenter.heroku.com/articles/scheduler
+- Heroku Jobs: https://devcenter.heroku.com/articles/scheduled-jobs-custom-clock-processes
+- **Heroku Alternative Worker:** https://devcenter.heroku.com/articles/delayed-job
+- One last alternative that is compatible - https://github.com/Rykian/clockwork
 - Worker runs every 5 minutes , iterating through each row in the Jobs table
 - The Worker checks each Job's and evaluates if it should be executed based on this algorithm:
 
@@ -31,11 +37,6 @@ The purpose of this server is to serve the mail-funnel-client (soon available in
 2 Check the `Executed:Boolean` param, check if job has been executed yet 
    2.1 (Disabled)'Executed_Count:Integer` param (record how many times it has been executed) 
 ```
-**Libraries for Background-Jobs (Being Evaluated):**  
-- Delayed Job - In Shopify CEO Github account (Programmer) https://github.com/tobi/delayed_job  
-- Delayed Job (**GOOD**) https://github.com/collectiveidea/delayed_job (Built From Shopify Source Code), it can send emails using its mailer - but we may need it to send emails using a 3rd party API Service instead  
-- Sideqik + ActiveJob - https://github.com/mperham/sidekiq/wiki/Active+Job  
-- Sucker Punch - A Ruby Async Concurrent processing library (Influenced by Sideqik and Girl_Friday) - Executes jobs in future (But, Because data stored in memory), its not recomended for a lot of mission-critical jobs because a process restart loses all future jobs 
 
 
 ### Workers
