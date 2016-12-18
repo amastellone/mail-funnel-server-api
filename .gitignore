@@ -31,3 +31,5 @@
 config/database.yml
 */*/database.yml
 */database.yml
+
+config/database.yml
