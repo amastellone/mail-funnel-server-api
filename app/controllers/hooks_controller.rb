@@ -2,13 +2,11 @@ class HooksController < ApplicationController
   before_action :set_hook, only: [:show, :edit, :update, :destroy]
 
   # GET /hooks
-  # GET /hooks.json
   def index
     @hooks = Hook.all
   end
 
   # GET /hooks/1
-  # GET /hooks/1.json
   def show
   end
 
@@ -22,7 +20,6 @@ class HooksController < ApplicationController
   end
 
   # POST /hooks
-  # POST /hooks.json
   def create
     @hook = Hook.new(hook_params)
 
@@ -38,7 +35,6 @@ class HooksController < ApplicationController
   end
 
   # PATCH/PUT /hooks/1
-  # PATCH/PUT /hooks/1.json
   def update
     respond_to do |format|
       if @hook.update(hook_params)
@@ -52,7 +48,6 @@ class HooksController < ApplicationController
   end
 
   # DELETE /hooks/1
-  # DELETE /hooks/1.json
   def destroy
     @hook.destroy
     respond_to do |format|

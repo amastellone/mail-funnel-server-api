@@ -2,15 +2,27 @@ class EmailListsController < ApplicationController
 	before_action :set_email_list, only: [:show, :update, :destroy]
 
 	# GET /email_lists
-	# GET /email_lists.json
 	def index
-		@email_lists = EmailList.all
+		logger.info "Using EmailLists Controller, Index Action"
+
+		if params.has_key?(:app_id)
+			if params.has_key?(:name)
+				@email_lists = EmailList.where(name: params[:name], app_id: params[:app_id])
+			else
+				@email_lists = EmailList.where(app_id: params[:app_id])
+			end
+		else
+			@email_lists = EmailList.all
+		end
+
+		logger.debug json: @email_lists
 		render json: @email_lists
 	end
 
 	# GET /email_lists/1
 	# GET /email_lists/1.json
 	def show
+		logger.info "Using EmailLists Controller, Show Action"
 		render json: @email_list
 	end
 
