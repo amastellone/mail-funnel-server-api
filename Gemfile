@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 # SERVER
 
+gem 'foreman'
+
 # gem 'rake', '< 11.1'
 
 # gem 'activerecord-session_store'
