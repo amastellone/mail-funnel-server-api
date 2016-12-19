@@ -1,5 +1,6 @@
 # Mail-Funnel-Server API
-[![Coverage Status](https://coveralls.io/repos/github/vaskaloidis/mail-funnel-server-api/badge.svg?branch=master)](https://coveralls.io/github/vaskaloidis/mail-funnel-server-api?branch=master)
+[![Coverage Status](https://circleci.com/gh/vaskaloidis/mail-funnel-server-api.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/vaskaloidis/mail-funnel-server-api.svg?style=shield&circle-token=:circle-token) [![Coverage Status](https://coveralls.io/repos/github/vaskaloidis/mail-funnel-server-api/badge.svg?branch=master)](https://coveralls.io/github/vaskaloidis/mail-funnel-server-api?branch=master)
+
 
 Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cron-Job Worker.
 

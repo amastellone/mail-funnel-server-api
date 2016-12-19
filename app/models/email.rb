@@ -1,6 +1,6 @@
 class Email < ApplicationRecord
-validates :email, presence: { strict: true }
+	validates :email_address, presence: { strict: true }
 
-  belongs_to :email_list
-  belongs_to :app
+	belongs_to :email_list
+	belongs_to :app
 end
