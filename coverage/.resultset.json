@@ -1,14 +1,138 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/spec/models/mail_funnel_server_config_spec.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/controllers/apps_controller_spec.rb": [
+        1,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
+        null,
+        1,
+        0,
+        null,
+        null,
+        null,
+        null,
+        null,
         1,
         null,
         1,
         1,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        1,
+        1,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        1,
+        1,
+        1,
+        0,
+        0,
+        null,
+        null,
+        null,
+        1,
+        null,
+        0,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        1,
+        1,
+        null,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        null,
+        1,
+        1,
+        1,
+        0,
+        null,
+        null,
+        1,
+        0,
+        0,
+        0,
+        0,
+        null,
+        null,
+        1,
+        0,
+        null,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        1,
+        1,
+        0,
+        null,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        null,
+        1,
+        1,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/spec/rails_helper.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/rails_helper.rb": [
         null,
         1,
         1,
@@ -64,14 +188,14 @@
         1,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/environment.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/environment.rb": [
         null,
         1,
         null,
         null,
         1
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/application.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/application.rb": [
         1,
         null,
         1,
@@ -148,12 +272,12 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/boot.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/boot.rb": [
         1,
         null,
         1
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/spring.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/spring.rb": [
         null,
         null,
         null,
@@ -161,7 +285,7 @@
         null,
         5
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/environments/test.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/environments/test.rb": [
         1,
         null,
         null,
@@ -205,7 +329,7 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/application_controller_renderer.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/application_controller_renderer.rb": [
         null,
         null,
         null,
@@ -213,44 +337,7 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/backtrace_silencers.rb": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/cors.rb": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/backtrace_silencers.rb": [
         null,
         null,
         null,
@@ -259,13 +346,50 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/filter_parameter_logging.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/cors.rb": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/filter_parameter_logging.rb": [
         null,
         null,
         null,
         1
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/inflections.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/inflections.rb": [
         null,
         null,
         null,
@@ -283,13 +407,13 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/mime_types.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/mime_types.rb": [
         null,
         null,
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/new_framework_defaults.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/new_framework_defaults.rb": [
         null,
         null,
         null,
@@ -326,7 +450,7 @@
         null,
         1
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/reload_api.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/reload_api.rb": [
         1,
         0,
         null,
@@ -341,7 +465,7 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/initializers/wrap_parameters.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/initializers/wrap_parameters.rb": [
         null,
         null,
         null,
@@ -353,8 +477,8 @@
         null,
         null,
         1,
-        1,
-        1,
+        2,
+        2,
         null,
         null,
         null,
@@ -363,7 +487,43 @@
         1,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/spec/factories/mail_funnel_server_configs.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/factories/apps.rb": [
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/factories/email_lists.rb": [
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/factories/emails.rb": [
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/factories/hooks.rb": [
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/factories/jobs.rb": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
         1,
         1,
         1,
@@ -371,7 +531,22 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/config/routes.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/factories/mail_funnel_server_configs.rb": [
+        1,
+        1,
+        1,
+        1,
+        null,
+        null
+      ],
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/factories/shops.rb": [
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/config/routes.rb": [
         1,
         null,
         null,
@@ -403,7 +578,7 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/api/api.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/api/api.rb": [
         1,
         1,
         1,
@@ -805,31 +980,31 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/helpers/application_helper.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/helpers/application_helper.rb": [
         1,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/helpers/apps_helper.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/helpers/apps_helper.rb": [
         1,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/helpers/email_lists_helper.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/helpers/email_lists_helper.rb": [
         1,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/helpers/emails_helper.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/helpers/emails_helper.rb": [
         1,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/helpers/hooks_helper.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/helpers/hooks_helper.rb": [
         1,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/helpers/jobs_helper.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/helpers/jobs_helper.rb": [
         1,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/spec/support/factory_girl.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/spec/support/factory_girl.rb": [
         null,
         null,
         1,
@@ -845,16 +1020,102 @@
         null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/models/mail_funnel_server_config.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/controllers/apps_controller.rb": [
         1,
+        1,
+        null,
+        null,
+        1,
+        0,
+        null,
+        0,
+        0,
+        null,
+        0,
+        0,
+        0,
+        null,
+        0,
+        null,
+        null,
+        null,
+        0,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
+        0,
+        0,
+        null,
+        0,
+        null,
+        null,
+        0,
+        0,
+        null,
+        null,
+        null,
+        1,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
+        0,
+        0,
+        null,
+        0,
+        null,
+        null,
+        null,
+        null,
+        1,
+        0,
+        0,
+        null,
+        0,
+        null,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
+        null,
+        1,
+        null,
+        1,
+        0,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
         null
       ],
-      "/Users/vasilioskaloidis/Code/Rails/mail-funnel-server-api/app/models/application_record.rb": [
+      "/Users/mttwardowski/Desktop/Mail Funnel App/mail-funnel-server-api/app/controllers/application_controller.rb": [
         1,
-        1,
+        null,
+        null,
         null
       ]
     },
-    "timestamp": 1482077412
+    "timestamp": 1482520921
   }
 }
