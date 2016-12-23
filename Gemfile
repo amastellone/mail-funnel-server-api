@@ -84,8 +84,8 @@ group :development, :test do
 	%w[rspec rspec-core rspec-expectations rspec-rails rspec-mocks rspec-support].each do |lib|
 		gem lib, :git => "git://github.com/rspec/#{lib}.git", :branch => 'master'
 	end
-	# gem 'rspec-rails'
-	gem 'factory_girl_rails'
+	#gem 'rspec-rails'
+  gem 'factory_girl_rails'
 	gem 'spring-commands-rspec'
 end
 

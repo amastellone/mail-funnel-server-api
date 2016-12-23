@@ -1,23 +1,23 @@
-test:
-  override:
-    - echo "Skipping Tests (For now, until somebody can clean them up)"
-# VERSION
-# machine:
-#   ruby: 
-#     version: 2.3.1p112
-# ## TESTING
-# test:
-#   override:
-#     - phpunit test/unit-tests # use PHPunit for testing
-#   post:
-#     - bundle exec rake jasmine:ci: # add an extra test type
-#         environment:
-#           RAILS_ENV: test
-#           RACK_ENV: test
+#Use Ruby version 2.3.1 for CI
+machine:
+    ruby:
+      version: 2.3.1p112
 
-# test:
-#   post:
-#     - bundle exec rake test
+# Automatically install all gems before we run the Mail-Funnel App
+# Used just in case we installed a new gem and server hasn't installed it yet
+dependencies:
+  post:
+    - bundle exec rake assets:precompile
+
+# Circle CI will automatically find the RSpec test cases and run them
+# If you want to run extra test cases, just add them after the post like shown below
+# We don't need to run any other test cases for this app other than the ones we have already so leave this blank
+# I left the following below commented out so that we can see an example if need be later
+
+#test:
+#  post:
+#    - bundle exec rake test:custom
+
 
 # Heroku Deploy
 # deployment:
@@ -25,3 +25,4 @@ test:
 #     branch: master
 #     heroku:
 #       appname: mail-funnel-server-staging
+
