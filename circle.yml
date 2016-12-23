@@ -1,7 +1,7 @@
 #Use Ruby version 2.3.1 for CI
 machine:
     ruby:
-      version: 2.3.1p112
+      version: 2.3.1
 
 # Automatically install all gems before we run the Mail-Funnel App
 # Used just in case we installed a new gem and server hasn't installed it yet
