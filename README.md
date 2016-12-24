@@ -21,28 +21,56 @@ www.vasi.io - vkaloidis.herokuapp.com
 
 ```
 
-Mail-Funnels
+Mail-Funnels-Server
 
 ```
-# PRODUCTION
+## PRODUCTION
 https://mail-funnel-server.herokuapp.com/
 
 # CNAME ENTRIES
 App URL: api.mailfunnels.com
-App DNS: api.mailfunnels.com.herokudns.com
+App DNS: api.mailfunnels.herokudns.com
 
 
-# STAGING
+# #STAGING
 https://mail-funnel-server-staging.herokuapp.com
 
 # CNAME ENTRIES
-APP URL: api.mailfunnels.com
-APP DNS: staging.api.mailfunnels.com.herokudns.com
+APP URL: staging.api.mailfunnels.com
+APP DNS: staging.api.mailfunnels.herokudns.com
 
 APP URL: www.staging.api.mailfunnels.com
 APP DNS: www.staging.api.mailfunnels.herokudns.com
 
 ```
+
+Mail-Funnels-Client  
+
+```
+www.staging.mailfunnels.herokudns.com
+
+## PRODUCTION
+https://mail-funnel-client.herokuapp.com/
+
+# CNAME ENTRIES
+App URL: mailfunnels.com
+App DNS: mailfunnels.herokudns.com
+
+
+## STAGING
+https://mail-funnel-client-staging.herokuapp.com/
+
+# CNAME ENTRIES
+APP URL: staging.mailfunnels.com
+APP DNS: staging.mailfunnels.herokudns.com
+
+APP URL: www.staging.mailfunnels.com
+APP DNS: www.staging.mailfunnels.herokudns.com
+
+
+```
+
+
 
 
 ## Contribute
