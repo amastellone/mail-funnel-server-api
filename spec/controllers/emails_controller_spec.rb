@@ -29,11 +29,12 @@ RSpec.describe EmailsController, type: :controller do
   # Email. As you add validations to Email, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # Valid attributes are generated using FactoryGirl
+    FactoryGirl.attributes_for(:email)
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {email_address: nil}
   }
 
   # This should return the minimal set of values that should be in the session
@@ -42,11 +43,34 @@ RSpec.describe EmailsController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
-    it "returns a success response" do
+
+    # Check to see if app_id param is given, it returns a success response
+    it 'returns a success response if app_id param is given' do
       email = Email.create! valid_attributes
+      get :index, params: {app_id: email.app_id}, session: valid_session
+      expect(response).to be_success
+    end
+
+    # Check to see if app_id and email_list_id param is given, it returns a success response
+    it 'returns a success response if app_id and email_list_id param is given' do
+      email = Email.create! valid_attributes
+      get :index, params: {app_id: email.app_id, email_list_id: email.email_list_id}, session: valid_session
+      expect(response).to be_success
+    end
+
+    # Check to see if only email_list_id param is given, it returns a success response
+    it 'returns a success response if email_list_id param is given' do
+      email = Email.create! valid_attributes
+      get :index, params: {email_list_id: email.email_list_id}, session: valid_session
+      expect(response).to be_success
+    end
+
+    it "returns a success response" do
       get :index, params: {}, session: valid_session
       expect(response).to be_success
     end
+
+
   end
 
   describe "GET #show" do
@@ -69,52 +93,52 @@ RSpec.describe EmailsController, type: :controller do
 
         post :create, params: {email: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:created)
-        expect(response.content_type).to eq('application/json')
         expect(response.location).to eq(email_url(Email.last))
       end
-    end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the new email" do
-
-        post :create, params: {email: invalid_attributes}, session: valid_session
+      # Check to see if it renders and error response if email is not saved
+      it 'renders an error JSON response if new email not saved' do
+        # Set app.save to false
+        allow_any_instance_of(Email).to receive(:save).and_return(false)
+        post :create, params: {email: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
       end
+
+
     end
+
   end
 
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {name: "NewName"}
       }
 
       it "updates the requested email" do
         email = Email.create! valid_attributes
         put :update, params: {id: email.to_param, email: new_attributes}, session: valid_session
         email.reload
-        skip("Add assertions for updated state")
+        email.name == "NewName"
       end
 
       it "renders a JSON response with the email" do
         email = Email.create! valid_attributes
-
         put :update, params: {id: email.to_param, email: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json')
       end
-    end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the email" do
+      # Check to see if it renders and error response if email not updated
+      it 'renders an error JSON response if email is not updated' do
         email = Email.create! valid_attributes
-
-        put :update, params: {id: email.to_param, email: invalid_attributes}, session: valid_session
+        # Set app.save to false
+        allow_any_instance_of(Email).to receive(:update).with(any_args).and_return(false)
+        post :update, params: {id: email.to_param, email: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
       end
+
     end
+
   end
 
   describe "DELETE #destroy" do
