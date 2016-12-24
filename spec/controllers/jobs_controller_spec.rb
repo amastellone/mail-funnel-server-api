@@ -29,7 +29,8 @@ RSpec.describe JobsController, type: :controller do
   # Job. As you add validations to Job, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # Valid attributes are generated using FactoryGirl
+    FactoryGirl.attributes_for(:job)
   }
 
   let(:invalid_attributes) {
@@ -43,9 +44,34 @@ RSpec.describe JobsController, type: :controller do
 
   describe "GET #index" do
 
-    # Test to see if logger has gotten
+    # Check to see if no jobs in db, return no_content response
+    it 'returns no_content response if no jobs in database' do
+      get :index, params: {}, session: valid_session
+      expect(response).to_not have_http_status(204) # 204 is no_content http response
+    end
 
-    # Generated Automatically by RSpec
+    # Check to see if given app_id param it returns a successful response
+    it 'returns success response given app_id param' do
+      job = Job.create! valid_attributes
+      get :index, params: {app_id: job.app_id}, session: valid_session
+      expect(response).to be_success
+    end
+
+    # Check to see if given app_id and hook_identifier params it returns a successful response
+    it 'returns success response given app_id and hook_identifier params' do
+      job = Job.create! valid_attributes
+      get :index, params: {app_id: job.app_id, hook_identifier: job.hook_identifier}, session: valid_session
+      expect(response).to be_success
+    end
+
+    # Check to see if given app_id and client_campaign params it returns a successful response
+    it 'returns success response given app_id and client_campaign params' do
+      job = Job.create! valid_attributes
+      get :index, params: {app_id: job.app_id, client_campaign: job.client_campaign}, session: valid_session
+      expect(response).to be_success
+    end
+
+
     it "returns a success response" do
       job = Job.create! valid_attributes
       get :index, params: {}, session: valid_session
@@ -65,6 +91,7 @@ RSpec.describe JobsController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
+
       it "creates a new Job" do
         expect {
           post :create, params: {job: valid_attributes}, session: valid_session
@@ -78,29 +105,30 @@ RSpec.describe JobsController, type: :controller do
         expect(response.content_type).to eq('application/json')
         expect(response.location).to eq(job_url(Job.last))
       end
-    end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the new job" do
-
-        post :create, params: {job: invalid_attributes}, session: valid_session
+      # Check to see if it renders and error response if job not saved
+      it 'renders an error JSON response if new job not saved' do
+        # Set job.save to false
+        allow_any_instance_of(Job).to receive(:save).and_return(false)
+        post :create, params: {job: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
       end
+
     end
+
   end
 
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {name: "NewName"}
       }
 
       it "updates the requested job" do
         job = Job.create! valid_attributes
         put :update, params: {id: job.to_param, job: new_attributes}, session: valid_session
         job.reload
-        skip("Add assertions for updated state")
+        job.name == "NewName"
       end
 
       it "renders a JSON response with the job" do
@@ -110,17 +138,18 @@ RSpec.describe JobsController, type: :controller do
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to eq('application/json')
       end
-    end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the job" do
+      # Check to see if it renders and error response if job not updated
+      it 'renders an error JSON response if new job not updated' do
         job = Job.create! valid_attributes
-
-        put :update, params: {id: job.to_param, job: invalid_attributes}, session: valid_session
+        # Set job.update to false
+        allow_any_instance_of(Job).to receive(:update).with(any_args).and_return(false)
+        post :update, params: {id: job.to_param, job: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
       end
+
     end
+
   end
 
   describe "DELETE #destroy" do
@@ -131,5 +160,8 @@ RSpec.describe JobsController, type: :controller do
       }.to change(Job, :count).by(-1)
     end
   end
+
+
+
 
 end

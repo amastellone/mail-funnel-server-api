@@ -19,6 +19,7 @@ class HooksController < ApplicationController
   def edit
   end
 
+
   # POST /hooks
   def create
     @hook = Hook.new(hook_params)

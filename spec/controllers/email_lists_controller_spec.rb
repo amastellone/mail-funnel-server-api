@@ -29,11 +29,12 @@ RSpec.describe EmailListsController, type: :controller do
   # EmailList. As you add validations to EmailList, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # Valid attributes are generated using FactoryGirl
+    FactoryGirl.attributes_for(:email_list)
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+
   }
 
   # This should return the minimal set of values that should be in the session
@@ -42,11 +43,27 @@ RSpec.describe EmailListsController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
-    it "returns a success response" do
+
+    # Check to see if app_id param is given, return success response
+    it 'returns a success response if app_id param is given' do
       email_list = EmailList.create! valid_attributes
+      get :index, params: {app_id: email_list.app_id}, session: valid_session
+      expect(response).to be_success
+    end
+
+    # Check to see if app_id and app_name param is given, it returns success response
+    it 'returns a success response if app_id and name param are given' do
+      email_list = EmailList.create! valid_attributes
+      get :index, params: {app_id: email_list.app_id, name: email_list.name}, session: valid_session
+      expect(response).to be_success
+    end
+
+    it "returns a success response" do
       get :index, params: {}, session: valid_session
       expect(response).to be_success
     end
+
+
   end
 
   describe "GET #show" do
@@ -69,32 +86,33 @@ RSpec.describe EmailListsController, type: :controller do
 
         post :create, params: {email_list: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:created)
-        expect(response.content_type).to eq('application/json')
         expect(response.location).to eq(email_list_url(EmailList.last))
       end
-    end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the new email_list" do
 
-        post :create, params: {email_list: invalid_attributes}, session: valid_session
+      # Check to see if it renders and error response if EmailList not saved
+      it 'renders an error JSON response if new EmailList not saved' do
+        # Set EmailList.save to false
+        allow_any_instance_of(EmailList).to receive(:save).and_return(false)
+        post :create, params: {email_list: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
       end
+
     end
+
   end
 
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {description: "NewAttributeDescription"}
       }
 
       it "updates the requested email_list" do
         email_list = EmailList.create! valid_attributes
         put :update, params: {id: email_list.to_param, email_list: new_attributes}, session: valid_session
         email_list.reload
-        skip("Add assertions for updated state")
+        email_list.description == "NewAttributeDescription"
       end
 
       it "renders a JSON response with the email_list" do
@@ -102,19 +120,19 @@ RSpec.describe EmailListsController, type: :controller do
 
         put :update, params: {id: email_list.to_param, email_list: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json')
       end
-    end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the email_list" do
+      # Check to see if it renders and error response if email_list not updated
+      it 'renders an error JSON response if new EmailList not saved' do
         email_list = EmailList.create! valid_attributes
-
-        put :update, params: {id: email_list.to_param, email_list: invalid_attributes}, session: valid_session
+        # Set EmailList.update to false
+        allow_any_instance_of(EmailList).to receive(:update).with(any_args).and_return(false)
+        post :update, params: {id: email_list.to_param, email_list: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
       end
+
     end
+
   end
 
   describe "DELETE #destroy" do

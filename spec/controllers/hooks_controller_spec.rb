@@ -29,7 +29,8 @@ RSpec.describe HooksController, type: :controller do
   # Hook. As you add validations to Hook, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # Valid attributes are generated using FactoryGirl
+    FactoryGirl.attributes_for(:hook)
   }
 
   let(:invalid_attributes) {
@@ -57,73 +58,73 @@ RSpec.describe HooksController, type: :controller do
     end
   end
 
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Hook" do
-        expect {
-          post :create, params: {hook: valid_attributes}, session: valid_session
-        }.to change(Hook, :count).by(1)
-      end
+#  describe "POST #create" do
+#    context "with valid params" do
+#      it "creates a new Hook" do
+#        expect {
+#          post :create, params: {hook: valid_attributes}, session: valid_session
+#        }.to change(Hook, :count).by(1)
+#      end
+#
+#      it "renders a JSON response with the new hook" do
+#
+#        post :create, params: {hook: valid_attributes}, session: valid_session
+#        expect(response).to have_http_status(:created)
+#        expect(response.content_type).to eq('application/json')
+#        expect(response.location).to eq(hook_url(Hook.last))
+#      end
+#    end
+#
+#    context "with invalid params" do
+#      it "renders a JSON response with errors for the new hook" do
+#
+#        post :create, params: {hook: invalid_attributes}, session: valid_session
+#        expect(response).to have_http_status(:unprocessable_entity)
+#        expect(response.content_type).to eq('application/json')
+#      end
+#    end
+#  end
 
-      it "renders a JSON response with the new hook" do
+#  describe "PUT #update" do
+#    context "with valid params" do
+#      let(:new_attributes) {
+#        skip("Add a hash of attributes valid for your model")
+#      }
 
-        post :create, params: {hook: valid_attributes}, session: valid_session
-        expect(response).to have_http_status(:created)
-        expect(response.content_type).to eq('application/json')
-        expect(response.location).to eq(hook_url(Hook.last))
-      end
-    end
+#      it "updates the requested hook" do
+#        hook = Hook.create! valid_attributes
+#        put :update, params: {id: hook.to_param, hook: new_attributes}, session: valid_session
+#        hook.reload
+#        skip("Add assertions for updated state")
+#      end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the new hook" do
+#      it "renders a JSON response with the hook" do
+#        hook = Hook.create! valid_attributes
 
-        post :create, params: {hook: invalid_attributes}, session: valid_session
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
-      end
-    end
-  end
+#        put :update, params: {id: hook.to_param, hook: valid_attributes}, session: valid_session
+#        expect(response).to have_http_status(:ok)
+#        expect(response.content_type).to eq('application/json')
+#      end
+#    end
 
-  describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+  #   context "with invalid params" do
+#      it "renders a JSON response with errors for the hook" do
+#        hook = Hook.create! valid_attributes
+#
+#        put :update, params: {id: hook.to_param, hook: invalid_attributes}, session: valid_session
+#        expect(response).to have_http_status(:unprocessable_entity)
+#        expect(response.content_type).to eq('application/json')
+#      end
+#    end
+#  end
 
-      it "updates the requested hook" do
-        hook = Hook.create! valid_attributes
-        put :update, params: {id: hook.to_param, hook: new_attributes}, session: valid_session
-        hook.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "renders a JSON response with the hook" do
-        hook = Hook.create! valid_attributes
-
-        put :update, params: {id: hook.to_param, hook: valid_attributes}, session: valid_session
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json')
-      end
-    end
-
-    context "with invalid params" do
-      it "renders a JSON response with errors for the hook" do
-        hook = Hook.create! valid_attributes
-
-        put :update, params: {id: hook.to_param, hook: invalid_attributes}, session: valid_session
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
-      end
-    end
-  end
-
-  describe "DELETE #destroy" do
-    it "destroys the requested hook" do
-      hook = Hook.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: hook.to_param}, session: valid_session
-      }.to change(Hook, :count).by(-1)
-    end
-  end
+#  describe "DELETE #destroy" do
+#    it "destroys the requested hook" do
+#      hook = Hook.create! valid_attributes
+#      expect {
+#        delete :destroy, params: {id: hook.to_param}, session: valid_session
+#      }.to change(Hook, :count).by(-1)
+#    end
+#  end
 
 end

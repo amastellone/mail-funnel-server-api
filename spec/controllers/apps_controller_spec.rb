@@ -29,11 +29,12 @@ RSpec.describe AppsController, type: :controller do
   # App. As you add validations to App, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # Valid attributes are generated using FactoryGirl
+    FactoryGirl.attributes_for(:app)
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {name: nil}
   }
 
   # This should return the minimal set of values that should be in the session
@@ -42,11 +43,20 @@ RSpec.describe AppsController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
+
+    # Check to see if success given app_name param
+    it 'return a success response given app_name param' do
+    app = App.create! valid_attributes
+    get :index, params: {name: app.name}, session: valid_session
+    expect(response).to be_success
+
+    end
+
     it "returns a success response" do
-      app = App.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_success
     end
+
   end
 
   describe "GET #show" do
@@ -69,32 +79,32 @@ RSpec.describe AppsController, type: :controller do
 
         post :create, params: {app: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:created)
-        expect(response.content_type).to eq('application/json')
         expect(response.location).to eq(app_url(App.last))
       end
-    end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the new app" do
-
-        post :create, params: {app: invalid_attributes}, session: valid_session
+      # Check to see if it renders and error response if app not saved
+      it 'renders an error JSON response if new app not saved' do
+        # Set app.save to false
+        allow_any_instance_of(App).to receive(:save).and_return(false)
+        post :create, params: {app: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
       end
+
     end
+
   end
 
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {api_key: "RANDOM"}
       }
 
       it "updates the requested app" do
         app = App.create! valid_attributes
         put :update, params: {id: app.to_param, app: new_attributes}, session: valid_session
         app.reload
-        skip("Add assertions for updated state")
+        app.api_key == "RANDOM"
       end
 
       it "renders a JSON response with the app" do
@@ -102,19 +112,19 @@ RSpec.describe AppsController, type: :controller do
 
         put :update, params: {id: app.to_param, app: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json')
       end
-    end
 
-    context "with invalid params" do
-      it "renders a JSON response with errors for the app" do
+      # Check to see if it renders and error response if app not updated
+      it 'renders an error JSON response if new app not updated' do
         app = App.create! valid_attributes
-
-        put :update, params: {id: app.to_param, app: invalid_attributes}, session: valid_session
+        # Set app.save to false
+        allow_any_instance_of(App).to receive(:update).with(any_args).and_return(false)
+        post :update, params: {id: app.to_param, app: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
       end
+
     end
+
   end
 
   describe "DELETE #destroy" do
@@ -125,5 +135,6 @@ RSpec.describe AppsController, type: :controller do
       }.to change(App, :count).by(-1)
     end
   end
+
 
 end
