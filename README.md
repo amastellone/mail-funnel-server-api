@@ -4,6 +4,74 @@
 
 Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cron-Job Worker.
 
+## URL + DNS  
+
+
+### Example  
+
+```
+Default URL - vkaloidis.herokuapp.com
+
+CNAME:
+vasi.io     - vkaloidis.herokuapp.com
+www.vasi.io - vkaloidis.herokuapp.com
+
+
+### Server
+
+```
+
+Mail-Funnels
+
+```
+# PRODUCTION
+https://mail-funnel-server.herokuapp.com/
+
+# CNAME ENTRIES
+App URL: api.mailfunnels.com
+App DNS: api.mailfunnels.com.herokudns.com
+
+
+# STAGING
+https://mail-funnel-server-staging.herokuapp.com
+
+# CNAME ENTRIES
+APP URL: api.mailfunnels.com
+APP DNS: staging.api.mailfunnels.com.herokudns.com
+
+APP URL: www.staging.api.mailfunnels.com
+APP DNS: www.staging.api.mailfunnels.herokudns.com
+
+```
+
+
+## Contribute
+Contribute code to the mail-funnel-server. Notify us if you are interested in joining the team, or fork us, and submit a pull request!
+
+### Github Dev-Ops Integrations (Services)
+
+Github addons that we installed have configured to use automatically when we push or deploy code (depending on when each service is congured to run)! 
+
+- List of Git Addons, TODO: https://github.com/stevemao/awesome-git-addons 
+- GitBook - http://gitbook.com
+- Code Climate: Code Quality Scanner
+- CodeCov: Code Coverage Tool
+- DeppBot: Gem (Dependency) scanner that finds any security issues in any installed gems, and out-dated incompatible gem versions
+
+### Slack Commands + Addons
+The Slack Services and Tools we have implemented, and their usage.
+#### Screen-sharing Addons  
+- https://www.join.me/
+- Leap (Currently used)
+ 
+```
+/leap — Share your browser window to a private URL.
+/leap screen — Share your entire screen to a private URL.
+/leap broadcast browser — Share your browser window to your personal URL.
+/leap broadcast screen — Share your entire screen to your personal URL.
+```  
+- https://www.bluejeans.com/onvideo 
+
 ## Server-Features
 The purpose of this server is to serve the mail-funnel-client (soon available in app-store) with the following services: Shopify Webhooks, REST CRUD JSON Web-Services and a Ruby background-job worker.
 
