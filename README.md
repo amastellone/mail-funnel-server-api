@@ -7,21 +7,11 @@ Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cr
 ## URL + DNS  
 
 
-### Example  
-
-```
-Default URL - vkaloidis.herokuapp.com
-
-CNAME:
-vasi.io     - vkaloidis.herokuapp.com
-www.vasi.io - vkaloidis.herokuapp.com
-
-
-### Server
-
-```
+### DNS Entries  
 
 Mail-Funnels-Server
+
+TODO: Replace herokudns.com with .herokuapp.com
 
 ```
 ## PRODUCTION
@@ -44,7 +34,9 @@ APP DNS: www.staging.api.mailfunnels.herokudns.com
 
 ```
 
+
 Mail-Funnels-Client  
+
 
 ```
 www.staging.mailfunnels.herokudns.com
@@ -69,9 +61,6 @@ APP DNS: www.staging.mailfunnels.herokudns.com
 
 
 ```
-
-
-
 
 ## Contribute
 Contribute code to the mail-funnel-server. Notify us if you are interested in joining the team, or fork us, and submit a pull request!
@@ -183,6 +172,7 @@ http://mailfunnel.bluehelmet.io
 Shopify API Endpoint
 http://mailfunnel.bluehelmet.io/api/
 ```
+
 
 **API JSON Authentication** (Task)
 	

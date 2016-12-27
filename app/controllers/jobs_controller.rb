@@ -40,6 +40,22 @@ class JobsController < ApplicationController
 		@job = Job.new(job_params)
 
 		if @job.save
+
+			case @job.execute_frequency
+
+				when 'execute_once'
+					# app_id, email_list_id, email_subject, email_content, execute_time
+					ProcessJobJob.set(wait: 1.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+				when 'execute_twice'
+					ProcessJobJob.set(wait: 1.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+					ProcessJobJob.set(wait: 2.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+				when 'execute_thrice'
+					ProcessJobJob.set(wait: 1.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+					ProcessJobJob.set(wait: 2.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+					ProcessJobJob.set(wait: 3.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+			end
+			ProcessJobJob.set(wait: 1.week).perform_later(arg1, arg2)
+
 			render json: @job, status: :created, location: @job
 		else
 			render json: @job.errors, status: :unprocessable_entity

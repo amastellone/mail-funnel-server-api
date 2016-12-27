@@ -2,6 +2,19 @@ source 'https://rubygems.org'
 
 # SERVER
 
+
+# Job Worker
+gem 'postmark-rails'
+
+# gem 'delayed_job_active_record'
+# gem 'delayed_job_recurring'
+# gem 'whenever', :require => false
+
+# gem 'redis-rails'
+gem 'redis-rails', '~> 4'
+
+gem 'resque-scheduler'
+
 gem 'foreman'
 
 # gem 'rake', '< 11.1'

@@ -3,6 +3,8 @@ MailFunnelServer::Application.routes.draw do
 	# http://localhost:3001/API/
 	mount API => '/'
 
+	require 'resque/server'
+	mount Resque::Server, at: '/jobs'
 
 	# http://localhost:3001/RESOURCE
 
