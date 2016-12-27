@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 # SERVER
 
-
 # Job Worker
 gem 'postmark-rails'
 
@@ -10,8 +9,7 @@ gem 'postmark-rails'
 # gem 'delayed_job_recurring'
 # gem 'whenever', :require => false
 
-# gem 'redis-rails'
-gem 'redis-rails', '~> 4'
+gem 'redis-rails'
 
 gem 'resque-scheduler'
 
@@ -93,12 +91,15 @@ end
 group :development, :test do
 	# Call 'byebug' anywhere in the code to stop execution and get a debugger console
 	gem 'byebug', platform: :mri
+
 	#RSpec
 	%w[rspec rspec-core rspec-expectations rspec-rails rspec-mocks rspec-support].each do |lib|
 		gem lib, :git => "git://github.com/rspec/#{lib}.git", :branch => 'master'
 	end
 	# gem 'rspec-rails'
+
 	gem 'factory_girl_rails'
+
 	gem 'spring-commands-rspec'
 end
 
