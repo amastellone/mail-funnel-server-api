@@ -39,22 +39,32 @@ class JobsController < ApplicationController
 	def create
 		@job = Job.new(job_params)
 
+		tomorrow = Date.tomorrow
+		wait_once = Time.new(tomorrow.year, tomorrow.month, tomorrow.day, @job.execute_time, 0)
+
+		two_days = tomorrow.tomorrow
+		wait_twice = Time.new(two_days.year, two_days.month, two_days.day, @job.execute_time, 0)
+
+		three_days = two_days.tomorrow
+		wait_thrice = Time.new(three_days.year, three_days.month, three_days.day, @job.execute_time, 0)
+
 		if @job.save
 
+			# SendEmail Signature: # app_id, email_list_id, email_subject, email_content, execute_time
 			case @job.execute_frequency
 
+				when 'immediate'
+					SendEmailJob.perform_now(@job.app_id, @job.email_list_id, @job.content, @job.subject)
 				when 'execute_once'
-					# app_id, email_list_id, email_subject, email_content, execute_time
-					ProcessJobJob.set(wait: 1.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+					SendEmailJob.set(wait_until: wait_once).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject)
 				when 'execute_twice'
-					ProcessJobJob.set(wait: 1.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
-					ProcessJobJob.set(wait: 2.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+					SendEmailJob.set(wait_until: wait_once).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject)
+					SendEmailJob.set(wait_until: wait_twice).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject)
 				when 'execute_thrice'
-					ProcessJobJob.set(wait: 1.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
-					ProcessJobJob.set(wait: 2.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
-					ProcessJobJob.set(wait: 3.day).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject, @job.execute_time)
+					SendEmailJob.set(wait_until: wait_once).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject)
+					SendEmailJob.set(wait_until: wait_twice).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subject)
+					SendEmailJob.set(wait_until: wait_thrice).perform_later(@job.app_id, @job.email_list_id, @job.content, @job.subjecte)
 			end
-			ProcessJobJob.set(wait: 1.week).perform_later(arg1, arg2)
 
 			render json: @job, status: :created, location: @job
 		else
@@ -73,7 +83,11 @@ class JobsController < ApplicationController
 
 	# DELETE /jobs/1
 	def destroy
+		Resque.remove_delayed(SendFollowUpEmail, :user_id => current_user.id)
+
+
 		@job.destroy
+
 	end
 
 	private

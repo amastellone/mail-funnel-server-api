@@ -11,6 +11,7 @@ gem 'postmark-rails'
 
 gem 'redis-rails'
 
+gem 'resque'
 gem 'resque-scheduler'
 
 gem 'foreman'

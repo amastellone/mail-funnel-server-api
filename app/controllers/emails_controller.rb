@@ -2,14 +2,13 @@ class EmailsController < ApplicationController
 	before_action :set_email, only: [:show, :update, :destroy]
 	# before_action :set_list, only: [:index] # TODO: Enable the before_action for emails_controller
 
-	# GET /email_lists.json
+	# GET /emails
 	def index
-		logger.info "Using EmailLists Controller, Index Action"
-
 		if params.has_key?(:app_id)
 			if params.has_key?(:email_list_id)
 				@emails = Email.where(app_id: params[:app_id], email_list_id: params[:email_list_id])
 			else
+				puts "the right spot - just app_id"
 				@emails = Email.where(app_id: params[:app_id])
 			end
 		else

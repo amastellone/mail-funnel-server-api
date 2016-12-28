@@ -1,0 +1,42 @@
+<%= form_for(job_audit) do |f| %>
+  <% if job_audit.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(job_audit.errors.count, "error") %> prohibited this job_audit from being saved:</h2>
+
+      <ul>
+      <% job_audit.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :job_id %>
+    <%= f.text_field :job_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :time_sent %>
+    <%= f.text_field :time_sent %>
+  </div>
+
+  <div class="field">
+    <%= f.label :recipient %>
+    <%= f.text_field :recipient %>
+  </div>
+
+  <div class="field">
+    <%= f.label :subject %>
+    <%= f.text_field :subject %>
+  </div>
+
+  <div class="field">
+    <%= f.label :content %>
+    <%= f.text_area :content %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

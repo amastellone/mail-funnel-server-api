@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161227023730) do
+ActiveRecord::Schema.define(version: 20161227232616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,18 @@ ActiveRecord::Schema.define(version: 20161227023730) do
     t.string   "hook_identifier"
     t.string   "execute_frequency"
     t.string   "name"
+  end
+
+  create_table "job_audits", force: :cascade do |t|
+    t.integer  "job_id",        :foreign_key=>{:references=>"jobs", :name=>"fk_job_audits_job_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__job_audits_job_id", :using=>:btree}
+    t.datetime "time_sent",     :default=>"2016-12-27 23:22:46", :null=>false
+    t.string   "recipient"
+    t.string   "subject"
+    t.text     "content"
+    t.datetime "created_at",    :null=>false
+    t.datetime "updated_at",    :null=>false
+    t.integer  "app_id",        :foreign_key=>{:references=>"apps", :name=>"fk_job_audits_app_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__job_audits_app_id", :using=>:btree}
+    t.integer  "email_list_id", :foreign_key=>{:references=>"email_lists", :name=>"fk_job_audits_email_list_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__job_audits_email_list_id", :using=>:btree}
   end
 
   create_table "mail_funnel_server_configs", force: :cascade do |t|
