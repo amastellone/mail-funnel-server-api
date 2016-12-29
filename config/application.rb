@@ -36,14 +36,19 @@ module MailFunnelServer
 
 		# GRAPE API
 		config.paths.add 'app/api', glob: '**/*.rb'
-		config.autoload_paths                  += Dir["#{Rails.root}/app/api/*"]
+		config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
 
 		# Resque
 		config.active_job.queue_adapter        = :resque
+		config.active_job.queue_name_prefix    = Rails.env
+		config.active_job.queue_name_delimiter = '.'
+
 
 		# Postmark
 		config.action_mailer.delivery_method   = :postmark
 		config.action_mailer.postmark_settings = { :api_token => "e0ab21a2-3d3b-432b-8a77-132f25b58aa3" }
+		#TODO: Move the Postmark Mailer Config API_Token to .env
+
 
 		config.generators do |g|
 			g.orm :active_record

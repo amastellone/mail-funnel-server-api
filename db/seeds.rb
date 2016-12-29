@@ -115,22 +115,24 @@ while $x < 20 do
 		$y +=1
 	end
 
+	$j = 0
+	while $j < Random.rand(10...30) do
+		job = Job.create(execute_frequency:   "execute_once",
+		                 execute_time:        Random.rand(0...23),
+		                 subject:             Faker::Lorem.sentence,
+		                 content:             Faker::Lorem.paragraphs(1),
+		                 name:                Faker::Commerce.product_name,
+		                 app_id:              app.id,
+		                 campaign_identifier: Hook.offset(rand(Hook.count)).first.identifier,
+		                 hook_identifier:     Hook.offset(rand(Hook.count)).first.identifier,
+		                 executed:            false,
+		                 email_list_id:       list.id
+		)
+		puts "Job Created for " + job.hook_identifier.to_s
+		$j += 1
+	end
+
 	$x +=1
 end
 
-$x = 0
-while $x < Random.rand(10...30) do
-	job = Job.create(execute_frequency:   "execute_once",
-	                 execute_time:        "1330",
-	                 subject:             Faker::Lorem.sentence,
-	                 content:             Faker::Lorem.paragraphs(1),
-	                 name:                Faker::Commerce.product_name,
-	                 app_id:              App.offset(rand(App.count)).first.id,
-	                 campaign_identifier: Hook.offset(rand(Hook.count)).first.identifier,
-	                 hook_identifier:     Hook.offset(rand(Hook.count)).first.identifier,
-	                 executed:            false,
-	                 email_list_id:       EmailList.offset(rand(EmailList.count)).first
-	)
-	puts "Job Created for " + job.hook_identifier.to_s
-	$x += 1
-end
+

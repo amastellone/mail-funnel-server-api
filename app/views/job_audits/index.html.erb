@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Job Audits</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Job</th>
+      <th>Time sent</th>
+      <th>Recipient</th>
+      <th>Subject</th>
+      <th>Content</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @job_audits.each do |job_audit| %>
+      <tr>
+        <td><%= job_audit.job %></td>
+        <td><%= job_audit.time_sent %></td>
+        <td><%= job_audit.recipient %></td>
+        <td><%= job_audit.subject %></td>
+        <td><%= job_audit.content %></td>
+        <td><%= link_to 'Show', job_audit %></td>
+        <td><%= link_to 'Edit', edit_job_audit_path(job_audit) %></td>
+        <td><%= link_to 'Destroy', job_audit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Job Audit', new_job_audit_path %>
