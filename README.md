@@ -1,8 +1,10 @@
 # Mail-Funnel-Server API
-[![Coverage Status](https://circleci.com/gh/vaskaloidis/mail-funnel-server-api.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/vaskaloidis/mail-funnel-server-api.svg?style=shield&circle-token=:circle-token) [![Coverage Status](https://coveralls.io/repos/github/vaskaloidis/mail-funnel-server-api/badge.svg?branch=master)](https://coveralls.io/github/vaskaloidis/mail-funnel-server-api?branch=master)
+[![Coverage Status](https://circleci.com/gh/vaskaloidis/mail-funnel-server-api.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/vaskaloidis/mail-funnel-server-api.svg?style=shield&circle-token=:circle-token) [![Coverage Status](https://coveralls.io/repos/github/vaskaloidis/mail-funnel-server-api/badge.svg?branch=master)](https://coveralls.io/github/vaskaloidis/mail-funnel-server-api?branch=master)[![Stories in Ready](https://badge.waffle.io/vaskaloidis/mail-funnel-client.svg?label=ready&title=Ready)](http://waffle.io/vaskaloidis/mail-funnel-client)
 
 
 Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cron-Job Worker.
+
+System Architecture Docs - https://github.com/vaskaloidis/mail-funnel-client/wiki
 
 ## URL + DNS  
 

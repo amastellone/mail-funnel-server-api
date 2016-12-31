@@ -1,5 +1,20 @@
-
 namespace :Bluehelmet do
+
+	desc "Seed REST Data"
+	task :seed_env_vars => :environment do
+# Config
+		MailFunnelServerConfig.create(name: "app_name", value: ENV["APP_NAME"])
+		MailFunnelServerConfig.create(name: "app_key", value: ENV["APP_KEY"])
+		MailFunnelServerConfig.create(name: "app_secret", value: ENV["APP_SECRET"])
+		MailFunnelServerConfig.create(name: "app_scope", value: ENV["APP_SCOPE"])
+		#
+		# server_url = "http://localhost:3001/"
+		server_url = ENV['APP_URL']
+		MailFunnelServerConfig.create(name: "app_url", value: server_url)
+		MailFunnelServerConfig.create(name: "api_url", value: server_url + "api/")
+	end
+
+
 	# Database
 	desc "Reset Database"
 	task :reset => :environment do
@@ -26,7 +41,7 @@ namespace :Bluehelmet do
 			sh "rails --help | grep Bluehelmet: "
 		end
 		# Bundler.with_clean_env do
-			# sh "rails --help | grep db: "
+		# sh "rails --help | grep db: "
 		# end
 	end
 
