@@ -4,7 +4,15 @@
 
 Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cron-Job Worker.
 
-System Architecture Docs - https://github.com/vaskaloidis/mail-funnel-client/wiki
+ 
+**Mail-Funnel Project:**  
+  
+  
+- [Waffle Board](https://waffle.io/vaskaloidis/mail-funnel-client)
+- [Mail-Funnel Server API](https://github.com/vaskaloidis/mail-funnel-server-api)
+- [Mail-Funnel Client-Server WIKI](https://github.com/vaskaloidis/mail-funnel-client/wiki)
+- [Mail-Funnel Client-Server ISSUES](https://github.com/vaskaloidis/mail-funnel-client/issues)
+
 
 ## URL + DNS  
 
