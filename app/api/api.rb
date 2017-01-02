@@ -292,109 +292,15 @@ class API < Grape::API
 		end
 	end
 
-	resource :email_lists do
-		desc 'Returns Email-Lists for an App'
-		params do
-			requires :id, type: Integer, desc: 'Shopify ID'
-		end
-		route_param :id do
-			get do
-				EmailList.where(app_id: params[:id])
-			end
-		end
-	end
-
-	resource :emails do
-
-		desc 'Returns List of Emails'
-		params do
-			requires :name, type: String, desc: 'Shopify Shop Name.'
-		end
-		route_param :id do
-			get do
-				Email.where(list_id: params[:id])
-			end
-		end
-
-		desc 'Add an Email.'
-		params do
-			requires :name, type: String, desc: 'Name Update'
-			requires :email, type: String, desc: 'Email update'
-			requires :app_id, type: String, desc: 'App_ID'
-			requires :list_id, type: String, desc: 'List ID.'
-		end
-		post do
-			authenticate!
-			Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
-		end
-
-		desc 'Add or Update an email.'
-		params do
-			requires :id, type: Integer, desc: 'Email ID. Leave blank for new'
-			requires :name, type: String, desc: 'Name Update'
-			requires :email, type: String, desc: 'Email update'
-			requires :app_id, type: Integer, desc: 'App_ID'
-			requires :list_id, type: Integer, desc: 'List ID.'
-		end
-		put ':id' do
-			authenticate!
-			if params[:id] == 0
-				Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
-			else
-				Email.find(params[:id]).update({ id: params[:id], text: params[:status] })
-			end
-		end
-
-		desc 'Delete an Email.'
-		params do
-			requires :id, type: String, desc: 'Email ID.'
-		end
-		delete ':id' do
-			authenticate!
-			Email.find(params[:id]).destroy
-		end
-	end
-
-	resource :hooks do
-
-		desc 'Get Hook ID'
-		get :get_id
-		params do
-			requires :name, type: String, desc: 'Shopify App Name.'
-		end
-		route_param :id do
-			get do
-				result = App.where(name: params[:name]).first.id
-			end
-		end
-
-		desc 'Returns All Hooks'
-		get :get_hooks do
-			Hook.limit(10)
-		end
-	end
-
-	resource :apps do
-		desc 'Get Shopify App ID from Shopify App name'
-		get :get_id
-		params do
-			requires :name, type: String, desc: 'Shopify App Name.'
-		end
-		route_param :id do
-			get do
-				result = App.where(name: params[:name]).first.id
-			end
-		end
-
-		desc 'Create Or Update App'
-		get :create_app
-		params do
-			requires :name, type: String, desc: 'Shopify Shop Name.'
-		end
-		route_param :name do
-			get do
-				App.find_or_create_by(name: params[:name])
-			end
-		end
-	end
+	# resource :email_lists do
+	# 	desc 'Returns Email-Lists for an App'
+	# 	params do
+	# 		requires :id, type: Integer, desc: 'Shopify ID'
+	# 	end
+	# 	route_param :id do
+	# 		get do
+	# 			EmailList.where(app_id: params[:id])
+	# 		end
+	# 	end
+	# end
 end
