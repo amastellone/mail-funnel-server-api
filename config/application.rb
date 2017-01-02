@@ -29,8 +29,6 @@ module MailFunnelServer
 		# ActiveModelSerializers.config.adapter = :json_api
 		# ActiveModelSerializers.config.adapter = :json
 
-		config.autoload_paths << "#{Rails.root}/spec"
-
 		# Add Paths to Autoload
 		# Lib and Middleware
 		config.autoload_paths << "#{Rails.root}/lib"
