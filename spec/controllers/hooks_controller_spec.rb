@@ -58,6 +58,8 @@ RSpec.describe HooksController, type: :controller do
     end
   end
 
+  # TODO RSpec fix test case for HooksController
+
 #  describe "POST #create" do
 #    context "with valid params" do
 #      it "creates a new Hook" do
