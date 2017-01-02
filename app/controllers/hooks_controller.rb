@@ -25,36 +25,24 @@ class HooksController < ApplicationController
     @hook = Hook.new(hook_params)
 
     respond_to do |format|
-      if @hook.save
-        format.html { redirect_to @hook, notice: 'Hook was successfully created.' }
-        format.json { render :show, status: :created, location: @hook }
-      else
-        format.html { render :new }
-        format.json { render json: @hook.errors, status: :unprocessable_entity }
-      end
+        render :show, status: :created, location: @hook
+        render json: @hook.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /hooks/1
   def update
-    respond_to do |format|
       if @hook.update(hook_params)
-        format.html { redirect_to @hook, notice: 'Hook was successfully updated.' }
-        format.json { render :show, status: :ok, location: @hook }
+       render :show, status: :ok, location: @hook
       else
-        format.html { render :edit }
-        format.json { render json: @hook.errors, status: :unprocessable_entity }
+        render json: @hook.errors, status: :unprocessable_entity
       end
-    end
   end
 
   # DELETE /hooks/1
   def destroy
     @hook.destroy
-    respond_to do |format|
-      format.html { redirect_to hooks_url, notice: 'Hook was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+      head :no_content
   end
 
   private
