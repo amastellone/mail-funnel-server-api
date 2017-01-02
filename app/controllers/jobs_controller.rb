@@ -59,25 +59,6 @@ class JobsController < ApplicationController
 		wait_thrice = Time.new(three_days.year, three_days.month, three_days.day, @job.execute_time, 0)
 
 		if @job.save
-			render json: @job, status: :created, location: @job
-		else
-			render json: @job.errors, status: :unprocessable_entity
-		end
-	end
-
-	def create_job_2
-		@job = Job.new(job_params)
-
-		tomorrow  = Date.tomorrow
-		wait_once = Time.new(tomorrow.year, tomorrow.month, tomorrow.day, @job.execute_time, 0)
-
-		two_days   = tomorrow.tomorrow
-		wait_twice = Time.new(two_days.year, two_days.month, two_days.day, @job.execute_time, 0)
-
-		three_days  = two_days.tomorrow
-		wait_thrice = Time.new(three_days.year, three_days.month, three_days.day, @job.execute_time, 0)
-
-		if @job.save
 
 			# SendEmail Signature: # app_id, email_list_id, email_subject, email_content, execute_time
 			case @job.execute_frequency
@@ -112,7 +93,7 @@ class JobsController < ApplicationController
 
 	# DELETE /jobs/1
 	def destroy
-		Resque.remove_delayed(SendFollowUpEmail, :user_id => current_user.id)
+		# Resque.remove_delayed(SendFollowUpEmail, :user_id => current_user.id)
 
 
 		@job.destroy
