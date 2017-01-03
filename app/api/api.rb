@@ -257,39 +257,18 @@ class API < Grape::API
 	# REST API
 	# URL Schema http://localhost:3000/api/jobs/all'
 
-	resource :jobs do
+	resource :job_queue do
 
-		desc 'Returns Jobs for an App and Campaign'
+		desc 'Return Pending jobs in Resque Job queue for Job ID.'
 		params do
-			requires :id, type: Integer, desc: 'App ID'
-			requires :campaign_identifier, type: String, desc: 'Local Campaign Identifier'
+			requires :id, type: Integer, desc: 'Job ID'
 		end
-		post do
-			Job.where(app_id: params[:id], campaign_identifier: params[:campaign_identifier])
+		route_param :id do
+			get do
+				Status.find(params[:id])
+			end
 		end
 
-		desc 'Adds a new Job.'
-
-		params do
-			# t.references :time, foreign_key: true # Delete this
-			requires :frequency_time, type: Integer, desc: 'Value of the Frequency'
-			requires :email_content, type: String, desc: 'Email Contents'
-			requires :email_subject, type: String, desc: 'Email Subject'
-			requires :email_list_id, type: Integer, desc: 'Email List ID.'
-			# requires :user_local_id, type: Integer, desc: 'Local User ID'
-			requires :hook_identifier, type: String, desc: 'Hook Identifier'
-			requires :app_id, type: Integer, desc: 'App ID'
-		end
-		post do
-			authenticate!
-
-			Job.create(frequency_time: params[:frequency_time],
-			           frequency_value: "execute_once", # execute_twice, execute_thrice
-			           subject: params[:email_subject],
-			           content: params[:email_content],
-			           frequency: params[:frequency])
-			           # TODO: finish adding params that are in controller
-		end
 	end
 
 	# resource :email_lists do

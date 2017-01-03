@@ -12,11 +12,9 @@ class EmailListsController < ApplicationController
 				@email_lists = EmailList.where(app_id: params[:app_id])
 			end
 		else
-			render json: { :error => 'Must pass-in an app-id' }, :status => 500
+			return 'Must pass-in an app-id'
 		end
 
-		logger.debug json: @email_lists
-		render json: @email_lists
 	end
 
 	# GET /email_lists/1

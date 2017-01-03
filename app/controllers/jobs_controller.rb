@@ -21,12 +21,9 @@ class JobsController < ApplicationController
 				end
 			end
 		else
-			@jobs = Job.all
-			# render :json => { :errors => "Must pass-in an app-id" }
+			# @jobs = Job.all
+			return 'Must pass-in an app-id'
 		end
-		logger.info "Jobs Query Return JSON:"
-		logger.info @jobs.to_json
-		render json: @jobs
 	end
 
 	# GET /jobs/1
@@ -46,20 +43,20 @@ class JobsController < ApplicationController
 		end
 	end
 
+	# resque-scheduler info
+	# https://github.com/leshill/resque_spec/blob/master/spec/resque_spec/scheduler_spec.rb
 	def create
 		@job = Job.new(job_params)
 
 		development = true
 
 		if development
-			today = Date.today
-
-			wait_once = Time.new(today.year, today.month, today.day, today.hour, today.minute + 1, 0)
-
-			wait_twice = Time.new(today.year, today.month, today.day, today.minute + 2, 0)
-
-			wait_thrice = Time.new(today.year, today.month, today.day, today.minute + 3, 0)
+			now = Time.current
+			wait_once = now.advance(minutes: 1)
+			wait_twice = now.advance(minutes: 2)
+			wait_thrice = now.advance(minutes: 3)
 		else
+			today = Date.today
 			tomorrow  = Date.tomorrow
 			wait_once = Time.new(tomorrow.year, tomorrow.month, tomorrow.day, @job.execute_time, 0)
 
@@ -78,21 +75,21 @@ class JobsController < ApplicationController
 				when 'immediate'
 					# SendEmailJob.perform_now(@job.app_id, @job.email_list_id, @job.content, @job.subject)
 				when 'execute_once'
-				Resque.enqueue_at_with_queue(
-					 'default',
-					 wait_once,
-					 SendEmailJob,
-					 app_id: @job.app_id,
-				   email_list_id: @job.email_list_id,
-				   email_subject: @job.email_subject,
-				   email_content: @job.email_content
-				)
+					Resque.enqueue_at_with_queue(
+						 'default',
+						 wait_once,
+						 SendEmailJob,
+						 app_id:        @job.app_id,
+						 email_list_id: @job.email_list_id,
+						 email_subject: @job.email_subject,
+						 email_content: @job.email_content
+					)
 				when 'execute_twice'
 					Resque.enqueue_at_with_queue(
 						 'default',
 						 wait_once,
 						 SendEmailJob,
-						 app_id: @job.app_id,
+						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
 						 email_subject: @job.email_subject,
 						 email_content: @job.email_content
@@ -101,7 +98,7 @@ class JobsController < ApplicationController
 						 'default',
 						 wait_twice,
 						 SendEmailJob,
-						 app_id: @job.app_id,
+						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
 						 email_subject: @job.email_subject,
 						 email_content: @job.email_content
@@ -111,7 +108,7 @@ class JobsController < ApplicationController
 						 'default',
 						 wait_once,
 						 SendEmailJob,
-						 app_id: @job.app_id,
+						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
 						 email_subject: @job.email_subject,
 						 email_content: @job.email_content
@@ -120,7 +117,7 @@ class JobsController < ApplicationController
 						 'default',
 						 wait_twice,
 						 SendEmailJob,
-						 app_id: @job.app_id,
+						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
 						 email_subject: @job.email_subject,
 						 email_content: @job.email_content
@@ -129,7 +126,7 @@ class JobsController < ApplicationController
 						 'default',
 						 wait_thrice,
 						 SendEmailJob,
-						 app_id: @job.app_id,
+						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
 						 email_subject: @job.email_subject,
 						 email_content: @job.email_content

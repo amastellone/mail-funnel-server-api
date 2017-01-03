@@ -1,4 +1,10 @@
+require 'resque-meta'
+
+# https://github.com/lmarlow/resque-meta
+
 class SendEmailJob
+  extend Resque::Plugins::Meta
+
   @queue = :default
 
   def test_email(subject, to, from, html_body, track_opens, email_list_name)

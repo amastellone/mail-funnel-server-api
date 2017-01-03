@@ -9,12 +9,12 @@ gem 'postmark-rails'
 # gem 'delayed_job_recurring'
 # gem 'whenever', :require => false
 
-gem 'redis-rails'
-
 gem 'redis'
-
 gem 'resque'
 gem 'resque-scheduler'
+
+# gem 'resque-status' #TODO: Look at implementing resque-status or resque-meta plugin
+gem 'resque-meta'
 
 gem 'foreman'
 
