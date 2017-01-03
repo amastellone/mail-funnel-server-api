@@ -1,8 +1,5 @@
 class SendEmailJob
-  @queue = :email_send
-
-  # < ApplicationJob
-  # queue_as :default
+  @queue = :default
 
   def test_email(subject, to, from, html_body, track_opens, email_list_name)
     logger.debug "EMAIL SENT - List: " + email_list_name + " To: " + to + " Email Subject + Content: " + subject + " - " + html_body
@@ -19,16 +16,21 @@ class SendEmailJob
       content = email_content.gsub! '{$mf_recipient_name$}', email.name
       content = content.gsub! '{$mf_recipient_email$}', email.email_address
 
+      # POSTMARK API
+
       # Postmark API
-      # mail( # TODO: Enable Postmark API
+      # mail( # TODO: Enable + Test Postmark API
       # 	 :subject     => email_subject,
       # 	 :to          => email.email_address,
       # 	 :from        => 'sender@mailfunnels.com',
       # 	 :html_body   => email_content,
       # 	 :track_opens => 'true')
 
-      # Test Postmark API
+      # Postmark API - Development
       test_email(email_subject, email.email_address, 'sender@mailfunnels.com', email_content, 'true', list.name)
+
+
+      # AUDIT
 
       # Audit each email
       JobAudit.create(job_id: job_id, app_id: app_id,

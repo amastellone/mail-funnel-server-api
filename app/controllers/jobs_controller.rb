@@ -36,7 +36,7 @@ class JobsController < ApplicationController
 
 
 	# POST /jobs
-	def create
+	def create_2
 		@job = Job.new(job_params)
 
 		if @job.save
@@ -46,17 +46,29 @@ class JobsController < ApplicationController
 		end
 	end
 
-	def create_job_2
+	def create
 		@job = Job.new(job_params)
 
-		tomorrow  = Date.tomorrow
-		wait_once = Time.new(tomorrow.year, tomorrow.month, tomorrow.day, @job.execute_time, 0)
+		development = true
 
-		two_days   = tomorrow.tomorrow
-		wait_twice = Time.new(two_days.year, two_days.month, two_days.day, @job.execute_time, 0)
+		if development
+			today = Date.today
 
-		three_days  = two_days.tomorrow
-		wait_thrice = Time.new(three_days.year, three_days.month, three_days.day, @job.execute_time, 0)
+			wait_once = Time.new(today.year, today.month, today.day, today.hour, today.minute + 1, 0)
+
+			wait_twice = Time.new(today.year, today.month, today.day, today.minute + 2, 0)
+
+			wait_thrice = Time.new(today.year, today.month, today.day, today.minute + 3, 0)
+		else
+			tomorrow  = Date.tomorrow
+			wait_once = Time.new(tomorrow.year, tomorrow.month, tomorrow.day, @job.execute_time, 0)
+
+			two_days   = tomorrow.tomorrow
+			wait_twice = Time.new(two_days.year, two_days.month, two_days.day, @job.execute_time, 0)
+
+			three_days  = two_days.tomorrow
+			wait_thrice = Time.new(three_days.year, three_days.month, three_days.day, @job.execute_time, 0)
+		end
 
 		if @job.save
 
@@ -64,16 +76,64 @@ class JobsController < ApplicationController
 			case @job.execute_frequency
 
 				when 'immediate'
-					SendEmailJob.perform_now(@job.app_id, @job.email_list_id, @job.content, @job.subject)
+					# SendEmailJob.perform_now(@job.app_id, @job.email_list_id, @job.content, @job.subject)
 				when 'execute_once'
-					@job.queue_job(wait_once)
+				Resque.enqueue_at_with_queue(
+					 'default',
+					 wait_once,
+					 SendEmailJob,
+					 app_id: @job.app_id,
+				   email_list_id: @job.email_list_id,
+				   email_subject: @job.email_subject,
+				   email_content: @job.email_content
+				)
 				when 'execute_twice'
-					@job.queue_job(wait_once)
-					@job.queue_job(wait_twice)
+					Resque.enqueue_at_with_queue(
+						 'default',
+						 wait_once,
+						 SendEmailJob,
+						 app_id: @job.app_id,
+						 email_list_id: @job.email_list_id,
+						 email_subject: @job.email_subject,
+						 email_content: @job.email_content
+					)
+					Resque.enqueue_at_with_queue(
+						 'default',
+						 wait_twice,
+						 SendEmailJob,
+						 app_id: @job.app_id,
+						 email_list_id: @job.email_list_id,
+						 email_subject: @job.email_subject,
+						 email_content: @job.email_content
+					)
 				when 'execute_thrice'
-					@job.queue_job(wait_once)
-					@job.queue_job(wait_twice)
-					@job.queue_job(wait_thrice)
+					Resque.enqueue_at_with_queue(
+						 'default',
+						 wait_once,
+						 SendEmailJob,
+						 app_id: @job.app_id,
+						 email_list_id: @job.email_list_id,
+						 email_subject: @job.email_subject,
+						 email_content: @job.email_content
+					)
+					Resque.enqueue_at_with_queue(
+						 'default',
+						 wait_twice,
+						 SendEmailJob,
+						 app_id: @job.app_id,
+						 email_list_id: @job.email_list_id,
+						 email_subject: @job.email_subject,
+						 email_content: @job.email_content
+					)
+					Resque.enqueue_at_with_queue(
+						 'default',
+						 wait_thrice,
+						 SendEmailJob,
+						 app_id: @job.app_id,
+						 email_list_id: @job.email_list_id,
+						 email_subject: @job.email_subject,
+						 email_content: @job.email_content
+					)
 			end
 
 			render json: @job, status: :created, location: @job

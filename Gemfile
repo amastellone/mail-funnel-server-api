@@ -11,6 +11,8 @@ gem 'postmark-rails'
 
 gem 'redis-rails'
 
+gem 'redis'
+
 gem 'resque'
 gem 'resque-scheduler'
 

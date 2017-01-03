@@ -16,7 +16,7 @@ class EmailsController < ApplicationController
 			if params.has_key?(:email_list_id)
 				@emails = Email.where(email_list_id: params[:email_list_id])
 			else
-			# 	TODO: Throw an error
+				render json: { :error => 'You need to pass-in an app_id or email_list_id' }, :status => 500
 			end
 		end
 
