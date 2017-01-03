@@ -1,4 +1,4 @@
-require 'resque_scheduler'
+require 'resque-scheduler'
 
 Resque.redis = 'localhost:6379'
 Resque.redis.namespace = "resque:SchedulerExample"
