@@ -15,21 +15,11 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+	require 'simplecov'
+	SimpleCov.start
+
 	require 'omniauth'
 	require 'dotenv'
-
-	config.include(Module.new do
-		def stub_api_for(klass)
-			klass.use_api (api = Her::API.new)
-
-			# Here, you would customize this for your own API (URL, middleware, etc)
-			# like you have done in your application’s initializer
-			api.setup url: ENV['MAILFUNNEL_API_SERVER'] do |c|
-				c.use Her::Middleware::FirstLevelParseJSON
-				c.adapter(:test) { |s| yield(s) }
-			end
-		end
-	end)
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.

@@ -1,0 +1,16 @@
+{
+  "name": "mail-funnel-server-api",
+  "scripts": {
+  },
+  "env": {
+    "environment": "test"
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+
+  ]
+}

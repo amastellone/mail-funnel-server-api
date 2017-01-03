@@ -1,4 +1,7 @@
 class EmailList < ApplicationRecord
-  belongs_to :apps
-  has_many   :emails
+	validates :name, presence: true
+
+	has_one :app
+	has_many :emails
+	has_one :job
 end

@@ -3,11 +3,20 @@ class API < Grape::API
 	format :json
 
 	puts "API LOADED AS /api/"
+	puts 
 	# puts @key
-	# puts @secret
+	# puts session[:api_secret]
 	# puts @tokens
 
+	# Set everything in sessions
+	# session[:api_key] 			= ENV['APP_KEY']
+	# session[:api_secret] 			= ENV['APP_SECRET']
+	# session[:api_url] 			= ENV['APP_URL']
+	# session[:app_name] 			= ENV['APP_NAME']
+	# session[:api_scope] 			= ENV['APP_SCOPE']
+
 	def initialize
+
 		super
 	end
 
@@ -16,19 +25,7 @@ class API < Grape::API
 		def initvars
 			puts 'INITIALIZED CONSTRUCTOR'
 			Dotenv::Railtie.load
-			# @key      = ENV['APP_KEY']
-			# @secret   = ENV['APP_SECRET']
-			# @appurl   = ENV['APP_URL']
-			@key      = "84990ccf831cea238324340d512307d"
-			@secret   = "18fb76db454fd01af035ebed69af51b6"
-			@appurl   = "http://e90ef07a.ngrok.io/api/"
-			@appname  = "mailfunnel-server"
-			@appscope = ENV['APP_SCOPE']
 			@tokens   = {}
-
-			puts "HELPER VARS:"
-			puts @key
-			puts @secret
 			puts @tokens
 		end
 
@@ -69,9 +66,11 @@ class API < Grape::API
 		end
 
 		def validate_hmac(hmac, request)
+			# TODO: Replicate this with JWT Token Key
+			app_secret = MailFunnelServerConfig.where(name: 'app_key').first.value
 			h      = params.reject { |k, _| k == 'hmac' || k == 'signature' }
 			query  = URI.escape(h.sort.collect { |k, v| "#{k}=#{v}" }.join('&'))
-			digest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), @secret, query)
+			digest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), app_secret, query)
 
 			unless (hmac == digest)
 				return [403, "Authentication failed. Digest provided was: #{digest}"]
@@ -79,29 +78,31 @@ class API < Grape::API
 		end
 
 		def verify_webhook(hmac, data)
+			app_secret = MailFunnelServerConfig.where(name: 'app_key').first.value
 			digest          = OpenSSL::Digest.new('sha256')
-			calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, @secret, data)).strip
+			calculated_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, app_secret, data)).strip
 
 			hmac == calculated_hmac
 		end
 
-		def bulk_edit_url
-			bulk_edit_url = "https://www.shopify.com/admin/bulk"\
-                    "?resource_name=ProductVariant"\
-                    "&edit=metafields.test.ingredients:string"
-			return bulk_edit_url
-		end
+		# def bulk_edit_url
+		# 	bulk_edit_url = "https://www.shopify.com/admin/bulk"\
+  #                   "?resource_name=ProductVariant"\
+  #                   "&edit=metafields.test.ingredients:string"
+		# 	return bulk_edit_url
+		# end
 
 		def create_all_webhooks
 			create_order_webhook
 		end
 
 		def create_order_webhook
+			app_url = MailFunnelServerConfig.where(name: 'api_url').first.value
 			# create webhook for order creation if it doesn't exist
 			unless ShopifyAPI::Webhook.find(:all).any?
 				webhook = {
 					 topic:   'cart/create',
-					 address: "#{@appurl}cart/create",
+					 address: "#{app_url}cart/create",
 					 format:  'json' }
 
 				ShopifyAPI::Webhook.create(webhook)
@@ -116,20 +117,24 @@ class API < Grape::API
 
 	# SHOPIFY WEBHOOKS
 
+	# STEP #1
+	# http://localhost:3001/API/install
 	get :install do
 		initvars()
 
 		add_app(params[:shop])
 
 		shop   = params[:shop]
-		scopes = "read_orders,read_products"
+		app_scope = MailFunnelServerConfig.where(name: 'app_scope').first.value
 
-		puts "INSTALL KEY VARIABLE:"
-		puts @key
+		app_key 	= MailFunnelServerConfig.where(name: 'app_key').first.value
+		app_secret = MailFunnelServerConfig.where(name: 'app_key').first.value
+		app_url = MailFunnelServerConfig.where(name: 'app_url').first.value
+
 
 		# construct the installation URL and redirect the merchant
-		install_url = "http://#{shop}/admin/oauth/authorize?client_id=#{@key}"\
-                "&scope=#{scopes}&redirect_uri=#{@appurl}auth"
+		install_url = "http://#{shop}/admin/oauth/authorize?client_id=#{app_secret}"\
+                "&scope=#{app_scope}&redirect_uri=#{api_url}auth"
 
 		# redirect to the install_url
 		redirect install_url
@@ -143,12 +148,15 @@ class API < Grape::API
 		code = params[:code]
 		hmac = params[:hmac]
 
+		app_key = MailFunnelServerConfig.where(name: 'app_key').first.value
+		app_secret = MailFunnelServerConfig.where(name: 'app_secret').first.value
+
 		# perform hmac validation to determine if the request is coming from Shopify
 		validate_hmac(hmac, request)
 
 		# if no access token for this particular shop exist,
 		# POST the OAuth request and receive the token in the response
-		get_shop_access_token(shop, @key, @secret, code)
+		get_shop_access_token(shop, app_key, app_secret, code)
 
 		# create webhook for order creation if it doesn't exist
 		create_all_webhooks
@@ -164,6 +172,9 @@ class API < Grape::API
 			email = params[:email]
 			code  = params[:code]
 			hmac  = params[:hmac]
+
+			app_key = MailFunnelServerConfig.where(name: 'app_key').first.value
+			app_secret = MailFunnelServerConfig.where(name: 'app_secret').first.value
 
 			hmac = request.env['HTTP_X_SHOPIFY_HMAC_SHA256']
 
@@ -203,7 +214,7 @@ class API < Grape::API
 						items.each do |item|
 							item = ShopifyAPI::Variant.find(item)
 
-							session = ShopifyAPI::Session.setup({ :api_key => @key, :secret => @secret })
+							session = ShopifyAPI::Session.setup({ :api_key => app_key, :secret => api_secret })
 							# Get Item ID
 							# Get Store that item belongs to
 							# Check if hook exists for store
@@ -281,109 +292,15 @@ class API < Grape::API
 		end
 	end
 
-	resource :email_lists do
-		desc 'Returns Email-Lists for an App'
-		params do
-			requires :id, type: Integer, desc: 'Shopify ID'
-		end
-		route_param :id do
-			get do
-				EmailList.where(app_id: params[:id])
-			end
-		end
-	end
-
-	resource :emails do
-
-		desc 'Returns List of Emails'
-		params do
-			requires :name, type: String, desc: 'Shopify Shop Name.'
-		end
-		route_param :id do
-			get do
-				Email.where(list_id: params[:id])
-			end
-		end
-
-		desc 'Add an Email.'
-		params do
-			requires :name, type: String, desc: 'Name Update'
-			requires :email, type: String, desc: 'Email update'
-			requires :app_id, type: String, desc: 'App_ID'
-			requires :list_id, type: String, desc: 'List ID.'
-		end
-		post do
-			authenticate!
-			Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
-		end
-
-		desc 'Add or Update an email.'
-		params do
-			requires :id, type: Integer, desc: 'Email ID. Leave blank for new'
-			requires :name, type: String, desc: 'Name Update'
-			requires :email, type: String, desc: 'Email update'
-			requires :app_id, type: Integer, desc: 'App_ID'
-			requires :list_id, type: Integer, desc: 'List ID.'
-		end
-		put ':id' do
-			authenticate!
-			if params[:id] == 0
-				Email.create!({ name: params[:name], email: params[:email], app_id: params[:status], list_id: params[:list_id], })
-			else
-				Email.find(params[:id]).update({ id: params[:id], text: params[:status] })
-			end
-		end
-
-		desc 'Delete an Email.'
-		params do
-			requires :id, type: String, desc: 'Email ID.'
-		end
-		delete ':id' do
-			authenticate!
-			Email.find(params[:id]).destroy
-		end
-	end
-
-	resource :hooks do
-
-		desc 'Get Hook ID'
-		get :get_id
-		params do
-			requires :name, type: String, desc: 'Shopify App Name.'
-		end
-		route_param :id do
-			get do
-				result = App.where(name: params[:name]).first.id
-			end
-		end
-
-		desc 'Returns All Hooks'
-		get :get_hooks do
-			Hook.limit(10)
-		end
-	end
-
-	resource :apps do
-		desc 'Get Shopify App ID from Shopify App name'
-		get :get_id
-		params do
-			requires :name, type: String, desc: 'Shopify App Name.'
-		end
-		route_param :id do
-			get do
-				result = App.where(name: params[:name]).first.id
-			end
-		end
-
-		desc 'Create Or Update App'
-		get :create_app
-		params do
-			requires :name, type: String, desc: 'Shopify Shop Name.'
-		end
-		route_param :name do
-			get do
-				App.find_or_create_by(name: params[:name])
-			end
-		end
-	end
+	# resource :email_lists do
+	# 	desc 'Returns Email-Lists for an App'
+	# 	params do
+	# 		requires :id, type: Integer, desc: 'Shopify ID'
+	# 	end
+	# 	route_param :id do
+	# 		get do
+	# 			EmailList.where(app_id: params[:id])
+	# 		end
+	# 	end
+	# end
 end

@@ -1,9 +1,26 @@
 class EmailsController < ApplicationController
 	before_action :set_email, only: [:show, :update, :destroy]
+	# before_action :set_list, only: [:index] # TODO: Enable the before_action for emails_controller
 
-	# GET /emails
+	# GET /email_lists.json
 	def index
-		@emails = Email.all
+		logger.info "Using EmailLists Controller, Index Action"
+
+		if params.has_key?(:app_id)
+			if params.has_key?(:email_list_id)
+				@emails = Email.where(app_id: params[:app_id], email_list_id: params[:email_list_id])
+			else
+				@emails = Email.where(app_id: params[:app_id])
+			end
+		else
+			if params.has_key?(:email_list_id)
+				@emails = Email.where(email_list_id: params[:email_list_id])
+			else
+			# 	TODO: Throw an error
+			end
+		end
+
+		logger.debug json: @emails
 		render json: @emails
 	end
 
@@ -43,8 +60,14 @@ class EmailsController < ApplicationController
 		@email = Email.find(params[:id])
 	end
 
+	# def set_list
+	# 	@list = EmailList.find(params[:email_list_id])
+	# end
+
 	# Never trust parameters from the scary internet, only allow the white list through.
 	def email_params
-		params.require(:email).permit(:email, :name, :email_list_id, :app_id)
+		# TODO: Implement a require(:email). requirement
+
+		params.require(:email).permit(:email_address, :name, :email_list_id, :app_id)
 	end
 end

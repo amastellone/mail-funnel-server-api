@@ -1,55 +1,130 @@
 class JobsController < ApplicationController
-  before_action :set_job, only: [:show, :update, :destroy]
+	before_action :set_job, only: [:show, :update, :destroy]
+	# before_action :set_app,  only: [:index]
+	# TODO: Possibly set before_action set app_id on Jobs.index
 
-  # GET /jobs
-  def index
-    @jobs = Job.all
-    render json: @jobs
-  end
+	# GET /jobs?app_id=:app_id&hook_identifier=:hook_identifier
+	def index
+		logger.info "Using Job.index Controller"
 
-  # GET /jobs/1
-  def show
-	  render json: @job
-  end
+		if params.has_key?(:app_id)
+			if params.has_key?(:hook_identifier)
+				logger.info "Using Job.index Controller, app_id / hook_identifier " + params[:app_id] + " / " + params[:hook_identifier]
+				@jobs = Job.where(app_id: params[:app_id], hook_identifier: params[:hook_identifier])
+			else
+				if params.has_key?(:client_campaign)
+					logger.info "Using Job.index Controller, app_id: " + params[:app_id] + " / client_campaign: " + params[:client_campaign]
+					@jobs = Job.where(app_id: params[:app_id], client_campaign: params[:client_campaign])
+				else
+					logger.info "Using Job.index Controller, app_id: " + params[:app_id]
+					@jobs = Job.where(app_id: params[:app_id])
+				end
+			end
+		else
+			@jobs = Job.all
+			# render :json => { :errors => "Must pass-in an app-id" }
+		end
+		logger.info "Jobs Query Return JSON:"
+		logger.info @jobs.to_json
+		render json: @jobs
+	end
+
+	# GET /jobs/1
+	def show
+		render json: @job
+	end
 
 
-  # POST /jobs
-  def create
-    @job = Job.new(job_params)
+	# POST /jobs
+	def create
+		@job = Job.new(job_params)
 
-    if @job.save
-	    render json: @job, status: :created, location: @job
-    else
-	    render json: @job.errors, status: :unprocessable_entity
-    end
-  end
+		if @job.save
+			render json: @job, status: :created, location: @job
+		else
+			render json: @job.errors, status: :unprocessable_entity
+		end
+	end
 
-  # PATCH/PUT /jobs/1
-  def update
-    if @job.update(job_params)
-      render json: @job
-    else
-      render json: @job.errors, status: :unprocessable_entity
-    end
-  end
+	def create_job_2
+		@job = Job.new(job_params)
 
-  # DELETE /jobs/1
-  def destroy
-    @job.destroy
-  end
+		tomorrow  = Date.tomorrow
+		wait_once = Time.new(tomorrow.year, tomorrow.month, tomorrow.day, @job.execute_time, 0)
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_job
-      @job = Job.find(params[:id])
-    end
+		two_days   = tomorrow.tomorrow
+		wait_twice = Time.new(two_days.year, two_days.month, two_days.day, @job.execute_time, 0)
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def job_params
-      params.require(:job).permit(:frequency, :execute_time,
-                                  :subject, :content,
-                                  :email_list_id, :app_id,
-                                  :hook_identifier, :executed,
-                                  :campaign_identifier)
-    end
+		three_days  = two_days.tomorrow
+		wait_thrice = Time.new(three_days.year, three_days.month, three_days.day, @job.execute_time, 0)
+
+		if @job.save
+
+			# SendEmail Signature: # app_id, email_list_id, email_subject, email_content, execute_time
+			case @job.execute_frequency
+
+				when 'immediate'
+					SendEmailJob.perform_now(@job.app_id, @job.email_list_id, @job.content, @job.subject)
+				when 'execute_once'
+					@job.queue_job(wait_once)
+				when 'execute_twice'
+					@job.queue_job(wait_once)
+					@job.queue_job(wait_twice)
+				when 'execute_thrice'
+					@job.queue_job(wait_once)
+					@job.queue_job(wait_twice)
+					@job.queue_job(wait_thrice)
+			end
+
+			render json: @job, status: :created, location: @job
+		else
+			render json: @job.errors, status: :unprocessable_entity
+		end
+	end
+
+	# PATCH/PUT /jobs/1
+	def update
+		if @job.update(job_params)
+			render json: @job
+		else
+			render json: @job.errors, status: :unprocessable_entity
+		end
+	end
+
+	# DELETE /jobs/1
+	def destroy
+		# Resque.remove_delayed(SendFollowUpEmail, :user_id => current_user.id)
+
+
+		@job.destroy
+
+	end
+
+	private
+	# Use callbacks to share common setup or constraints between actions.
+	def set_job
+		@job = Job.find(params[:id])
+	end
+
+	def set_app
+		@jobs = Job.where(app_id: params[:app_id])
+	end
+
+	def job_app_id_param
+		params.require(:job).require(:app_id)
+	end
+
+	# Never trust parameters from the scary internet, only allow the white list through.
+	def job_params
+		# TODO: SERVER-CONTROLLER: Updates the Job required-param, to only permit specific params
+		params.require(:job).permit!
+
+		# .permit(:executed, :execute_time, :execute_frequency,
+		#                             :subject, :content, :name,
+		#                             :campaign_identifier, :client_campaign,
+		#                             :email_list_id, :app_id,
+		#                             :hook_identifier, :content,
+		#                             :campaign_identifier)
+	end
+
 end
