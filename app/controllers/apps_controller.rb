@@ -1,40 +1,22 @@
 class AppsController < ApplicationController
 	before_action :set_app, only: [:show, :update, :destroy]
 
-	# GET /app/load/:name
-	def load
-		logger.info "Using App.load(:name) Controller"
-
-		if params.has_key?(:name)
-			app = App.where(name: params[:name]).first
-
-			if app.any?
-				logger.debug app.as_json
-				render json: app
-			else
-				render :json => { :errors => "empty" }
-			end
-
-		else
-			render :json => { :errors => "Must pass-in an app-name, and only an app-name" }
-		end
-
-		# TODO: SECURITY: Possibly add an extra encrypted param, when the client gets the App ID in AppsController.load(:name)
-
-	end
+	# TODO: SERVER-SECURITY - Add a security Token to App API-Controller Model
 
 	# GET /apps
 	def index
 		logger.info "Using App.Index Controller"
 
 		if params.has_key?(:name)
-			@apps = App.where(name: params[:name])
-		else
-			@apps = App.all
-		end
+			@app = App.where(name: params[:name])
 
-		logger.debug json: @apps
-		render json: @apps
+			logger.debug @app.as_json
+			render json: @app
+
+			# render :json => app, :include => [:campaigns] #TODO: Implement nattributes for Apps Model (at-least)
+		else
+			render :json => { :errors => "Must pass-in an app-name, and only an app-name" }
+		end
 	end
 
 	# GET /apps/1

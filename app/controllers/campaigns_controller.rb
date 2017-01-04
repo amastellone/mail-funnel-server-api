@@ -53,8 +53,7 @@ class CampaignsController < ApplicationController
 		@campaign = Campaign.find(params[:id])
 	end
 
-	# Only allow a trusted parameter "white list" through.
 	def campaign_params
-		params.fetch(:campaign, {})
+		params.require(:campaign).permit(:hook_id, :name, :hook_identifier, :app_id, :email_list_id)
 	end
 end
