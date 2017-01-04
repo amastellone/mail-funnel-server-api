@@ -127,7 +127,6 @@ if seed_data
 			                 content:             Faker::Lorem.paragraphs(1),
 			                 name:                Faker::Commerce.product_name,
 			                 app_id:              app.id,
-			                 campaign_identifier: Hook.offset(rand(Hook.count)).first.identifier,
 			                 hook_identifier:     Hook.offset(rand(Hook.count)).first.identifier,
 			                 executed:            false,
 			                 email_list_id:       list.id

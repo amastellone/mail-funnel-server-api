@@ -8,18 +8,15 @@ class JobsController < ApplicationController
 		logger.info "Using Job.index Controller"
 
 		if params.has_key?(:app_id)
-			if params.has_key?(:hook_identifier)
-				@jobs = Job.where(app_id: params[:app_id], hook_identifier: params[:hook_identifier])
+			if params.has_key?(:campaign_id)
+				@jobs = Job.where(app_id: params[:app_id], campaign_id: params[:campaign_id])
 			else
-				if params.has_key?(:client_campaign)
-					@jobs = Job.where(app_id: params[:app_id], client_campaign: params[:client_campaign])
-				else
-					@jobs = Job.where(app_id: params[:app_id])
-				end
+				@jobs = Job.where(app_id: params[:app_id])
 			end
 		elsif params.has_key?(:campaign_id)
 			@jobs = Job.where(campaign_id: params[:campaign_id])
 		else
+			logger.error "Jobs-Controller GET Query - no app_id was passed with the query"
 			return 'Must pass-in an app-id'
 		end
 
@@ -52,12 +49,12 @@ class JobsController < ApplicationController
 		development = true
 
 		if development
-			now = Time.current
-			wait_once = now.advance(minutes: 1)
-			wait_twice = now.advance(minutes: 2)
+			now         = Time.current
+			wait_once   = now.advance(minutes: 1)
+			wait_twice  = now.advance(minutes: 2)
 			wait_thrice = now.advance(minutes: 3)
 		else
-			today = Date.today
+			today     = Date.today
 			tomorrow  = Date.tomorrow
 			wait_once = Time.new(tomorrow.year, tomorrow.month, tomorrow.day, @job.execute_time, 0)
 
@@ -70,7 +67,7 @@ class JobsController < ApplicationController
 
 		if @job.save
 
-			# SendEmail Signature: # app_id, email_list_id, email_subject, email_content, execute_time
+			# SendEmail Signature: # app_id, email_list_id, subject, content, execute_time
 			case @job.execute_frequency
 
 				when 'immediate'
@@ -82,8 +79,8 @@ class JobsController < ApplicationController
 						 SendEmailJob,
 						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
-						 email_subject: @job.email_subject,
-						 email_content: @job.email_content
+						 subject: @job.subject,
+						 content: @job.content
 					)
 				when 'execute_twice'
 					Resque.enqueue_at_with_queue(
@@ -92,8 +89,8 @@ class JobsController < ApplicationController
 						 SendEmailJob,
 						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
-						 email_subject: @job.email_subject,
-						 email_content: @job.email_content
+						 subject: @job.subject,
+						 content: @job.content
 					)
 					Resque.enqueue_at_with_queue(
 						 'default',
@@ -101,8 +98,8 @@ class JobsController < ApplicationController
 						 SendEmailJob,
 						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
-						 email_subject: @job.email_subject,
-						 email_content: @job.email_content
+						 subject: @job.subject,
+						 content: @job.content
 					)
 				when 'execute_thrice'
 					Resque.enqueue_at_with_queue(
@@ -111,8 +108,8 @@ class JobsController < ApplicationController
 						 SendEmailJob,
 						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
-						 email_subject: @job.email_subject,
-						 email_content: @job.email_content
+						 subject: @job.subject,
+						 content: @job.content
 					)
 					Resque.enqueue_at_with_queue(
 						 'default',
@@ -120,8 +117,8 @@ class JobsController < ApplicationController
 						 SendEmailJob,
 						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
-						 email_subject: @job.email_subject,
-						 email_content: @job.email_content
+						 subject: @job.subject,
+						 content: @job.content
 					)
 					Resque.enqueue_at_with_queue(
 						 'default',
@@ -129,8 +126,8 @@ class JobsController < ApplicationController
 						 SendEmailJob,
 						 app_id:        @job.app_id,
 						 email_list_id: @job.email_list_id,
-						 email_subject: @job.email_subject,
-						 email_content: @job.email_content
+						 subject: @job.subject,
+						 content: @job.content
 					)
 			end
 

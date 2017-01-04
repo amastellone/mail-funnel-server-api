@@ -3,13 +3,14 @@ class CampaignsController < ApplicationController
 
 	# GET /campaigns
 	def index
-
 		if params.has_key?(:app_id)
 			if params.has_key?(:name)
 				@campaigns = Campaign.where(name: params[:name], app_id: params[:app_id])
 			else
 				@campaigns = Campaign.where(app_id: params[:app_id])
 			end
+		elsif params.has_key?(:campaign_id)
+			@campaigns = Campaign.where(campaign_id: params[:campaign_id])
 		else
 			return 'You need to pass an app_id'
 		end
