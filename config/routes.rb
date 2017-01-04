@@ -1,5 +1,6 @@
 MailFunnelServer::Application.routes.draw do
 
+  resources :campaigns
 	# http://localhost:3001/API/
 	mount API => '/'
 

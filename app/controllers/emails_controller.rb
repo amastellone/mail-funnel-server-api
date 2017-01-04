@@ -19,6 +19,7 @@ class EmailsController < ApplicationController
 				return 'You need to pass-in an app_id or email_list_id'
 			end
 		end
+		render json: @emails
 	end
 
 	# GET /emails/1

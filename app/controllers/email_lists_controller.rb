@@ -14,7 +14,7 @@ class EmailListsController < ApplicationController
 		else
 			return 'Must pass-in an app-id'
 		end
-
+		render json: @email_lists
 	end
 
 	# GET /email_lists/1

@@ -1,3 +1,4 @@
 class Hook < ApplicationRecord
-	has_many  :jobs
+	has_many  :campaigns
+	has_many :jobs
 end
