@@ -9,21 +9,22 @@ class JobsController < ApplicationController
 
 		if params.has_key?(:app_id)
 			if params.has_key?(:hook_identifier)
-				logger.info "Using Job.index Controller, app_id / hook_identifier " + params[:app_id] + " / " + params[:hook_identifier]
 				@jobs = Job.where(app_id: params[:app_id], hook_identifier: params[:hook_identifier])
 			else
 				if params.has_key?(:client_campaign)
-					logger.info "Using Job.index Controller, app_id: " + params[:app_id] + " / client_campaign: " + params[:client_campaign]
 					@jobs = Job.where(app_id: params[:app_id], client_campaign: params[:client_campaign])
 				else
-					logger.info "Using Job.index Controller, app_id: " + params[:app_id]
 					@jobs = Job.where(app_id: params[:app_id])
 				end
 			end
+		elsif params.has_key?(:campaign_id)
+			@jobs = Job.where(campaign_id: params[:campaign_id])
 		else
-			# @jobs = Job.all
 			return 'Must pass-in an app-id'
 		end
+
+		logger.debug @jobs.as_json
+		render json: @jobs
 	end
 
 	# GET /jobs/1

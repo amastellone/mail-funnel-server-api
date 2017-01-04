@@ -19,6 +19,7 @@ class CampaignsController < ApplicationController
 
 	# GET /campaigns/1
 	def show
+		@campaigns = Campaign.find(params[:id])
 		render json: @campaign
 	end
 
