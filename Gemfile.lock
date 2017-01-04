@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/rails/activeresource.git
-  revision: 271c42aa938e7577c3b1eff04c967eaaff76034f
+  revision: 55a2643398762fae10acf6bb8cb21ae354a8eba1
   specs:
     activeresource (5.0.0)
       activemodel (> 4.2, < 6)
@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: git://github.com/rspec/rspec-core.git
-  revision: 22ed96bb3dbb0214dc48d6b8490ade04cdf8eedd
+  revision: 98429a80a7187de797a9dcdc0ec84d38d0815af4
   branch: master
   specs:
     rspec-core (3.6.0.beta2)
@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: git://github.com/rspec/rspec-expectations.git
-  revision: f6a03426a39b2555c8ad67818b6ac99a69ec25c3
+  revision: 6d86a38f23e103c8839c0d5d7a06dc4b3b043d26
   branch: master
   specs:
     rspec-expectations (3.6.0.beta2)
@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: git://github.com/rspec/rspec-mocks.git
-  revision: 65820ee363837ea0995b8767618de1ef7ed3a6f2
+  revision: 141caf2791e9acf3b2307246e8d75bdfe2e0cb29
   branch: master
   specs:
     rspec-mocks (3.6.0.beta2)
@@ -49,7 +49,7 @@ GIT
 
 GIT
   remote: git://github.com/rspec/rspec-support.git
-  revision: 3271cddcb545d3532006e0bf69d9ed7864dd916e
+  revision: 436adb4b6d9b256fe8bb721a8d44080bd0701df9
   branch: master
   specs:
     rspec-support (3.6.0.beta2)
@@ -67,25 +67,25 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    actioncable (5.0.0.1)
-      actionpack (= 5.0.0.1)
+    actioncable (5.0.1)
+      actionpack (= 5.0.1)
       nio4r (~> 1.2)
       websocket-driver (~> 0.6.1)
-    actionmailer (5.0.0.1)
-      actionpack (= 5.0.0.1)
-      actionview (= 5.0.0.1)
-      activejob (= 5.0.0.1)
+    actionmailer (5.0.1)
+      actionpack (= 5.0.1)
+      actionview (= 5.0.1)
+      activejob (= 5.0.1)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 2.0)
-    actionpack (5.0.0.1)
-      actionview (= 5.0.0.1)
-      activesupport (= 5.0.0.1)
+    actionpack (5.0.1)
+      actionview (= 5.0.1)
+      activesupport (= 5.0.1)
       rack (~> 2.0)
       rack-test (~> 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionview (5.0.0.1)
-      activesupport (= 5.0.0.1)
+    actionview (5.0.1)
+      activesupport (= 5.0.1)
       builder (~> 3.1)
       erubis (~> 2.7.0)
       rails-dom-testing (~> 2.0)
@@ -94,21 +94,21 @@ GEM
       actionpack (>= 4.1, < 6)
       activemodel (>= 4.1, < 6)
       jsonapi (= 0.1.1.beta2)
-    activejob (5.0.0.1)
-      activesupport (= 5.0.0.1)
+    activejob (5.0.1)
+      activesupport (= 5.0.1)
       globalid (>= 0.3.6)
-    activemodel (5.0.0.1)
-      activesupport (= 5.0.0.1)
+    activemodel (5.0.1)
+      activesupport (= 5.0.1)
     activemodel-serializers-xml (1.0.1)
       activemodel (> 5.x)
       activerecord (> 5.x)
       activesupport (> 5.x)
       builder (~> 3.1)
-    activerecord (5.0.0.1)
-      activemodel (= 5.0.0.1)
-      activesupport (= 5.0.0.1)
+    activerecord (5.0.1)
+      activemodel (= 5.0.1)
+      activesupport (= 5.0.1)
       arel (~> 7.0)
-    activesupport (5.0.0.1)
+    activesupport (5.0.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
       minitest (~> 5.1)
@@ -127,7 +127,7 @@ GEM
     coderay (1.1.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
-    concurrent-ruby (1.0.2)
+    concurrent-ruby (1.0.4)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
@@ -145,14 +145,14 @@ GEM
     factory_girl_rails (4.8.0)
       factory_girl (~> 4.8.0)
       railties (>= 3.0.0)
-    faker (1.6.6)
+    faker (1.7.2)
       i18n (~> 0.5)
     ffi (1.9.14)
     foreman (0.82.0)
       thor (~> 0.19.1)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
-    grape (0.18.0)
+    grape (0.19.0)
       activesupport
       builder
       hashie (>= 2.1.0)
@@ -210,7 +210,7 @@ GEM
     mustermann-grape (0.4.0)
       mustermann (= 0.4.0)
     nio4r (1.2.1)
-    nokogiri (1.6.8.1)
+    nokogiri (1.7.0)
       mini_portile2 (~> 2.1.0)
     omniauth (1.3.1)
       hashie (>= 1.2, < 4)
@@ -228,7 +228,7 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
-    public_suffix (2.0.4)
+    public_suffix (2.0.5)
     puma (3.6.2)
     rack (2.0.1)
     rack-accept (0.4.5)
@@ -241,26 +241,26 @@ GEM
       rack (>= 1.6.0)
     rack-test (0.6.3)
       rack (>= 1.0)
-    rails (5.0.0.1)
-      actioncable (= 5.0.0.1)
-      actionmailer (= 5.0.0.1)
-      actionpack (= 5.0.0.1)
-      actionview (= 5.0.0.1)
-      activejob (= 5.0.0.1)
-      activemodel (= 5.0.0.1)
-      activerecord (= 5.0.0.1)
-      activesupport (= 5.0.0.1)
+    rails (5.0.1)
+      actioncable (= 5.0.1)
+      actionmailer (= 5.0.1)
+      actionpack (= 5.0.1)
+      actionview (= 5.0.1)
+      activejob (= 5.0.1)
+      activemodel (= 5.0.1)
+      activerecord (= 5.0.1)
+      activesupport (= 5.0.1)
       bundler (>= 1.3.0, < 2.0)
-      railties (= 5.0.0.1)
+      railties (= 5.0.1)
       sprockets-rails (>= 2.0.0)
-    rails-dom-testing (2.0.1)
+    rails-dom-testing (2.0.2)
       activesupport (>= 4.2.0, < 6.0)
-      nokogiri (~> 1.6.0)
+      nokogiri (~> 1.6)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
-    railties (5.0.0.1)
-      actionpack (= 5.0.0.1)
-      activesupport (= 5.0.0.1)
+    railties (5.0.1)
+      actionpack (= 5.0.1)
+      activesupport (= 5.0.1)
       method_source
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
@@ -284,7 +284,7 @@ GEM
       redis (~> 3.3)
       resque (~> 1.26)
       rufus-scheduler (~> 3.2)
-    rollbar (2.13.3)
+    rollbar (2.14.0)
       multi_json
     rufus-scheduler (3.3.1)
       tzinfo
@@ -312,7 +312,7 @@ GEM
       activerecord (>= 4.2, < 5.1)
       its-it (~> 1.2)
       schema_plus_core
-    scout_apm (2.1.17)
+    scout_apm (2.1.20)
     shopify_api (4.3.3)
       activeresource (>= 3.0.0)
       rack
@@ -331,7 +331,7 @@ GEM
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
       spring (>= 1.2, < 3.0)
-    sprockets (3.7.0)
+    sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.0)
