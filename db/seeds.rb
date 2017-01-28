@@ -1,5 +1,8 @@
 #SERVER - Seeds.rb
 
+require 'sidekiq/api'
+Sidekiq::Queue.new.clear
+
 # Config
 MailFunnelServerConfig.create(name: "app_name", value: ENV["APP_NAME"])
 MailFunnelServerConfig.create(name: "app_key", value: ENV["APP_KEY"])

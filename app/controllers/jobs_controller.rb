@@ -46,90 +46,22 @@ class JobsController < ApplicationController
 	def create
 		@job = Job.new(job_params)
 
-		development = true
-
-		if development
-			now         = Time.current
-			wait_once   = now.advance(minutes: 1)
-			wait_twice  = now.advance(minutes: 2)
-			wait_thrice = now.advance(minutes: 3)
-		else
-			today     = Date.today
-			tomorrow  = Date.tomorrow
-			wait_once = Time.new(tomorrow.year, tomorrow.month, tomorrow.day, @job.execute_time, 0)
-
-			two_days   = tomorrow.tomorrow
-			wait_twice = Time.new(two_days.year, two_days.month, two_days.day, @job.execute_time, 0)
-
-			three_days  = two_days.tomorrow
-			wait_thrice = Time.new(three_days.year, three_days.month, three_days.day, @job.execute_time, 0)
-		end
-
 		if @job.save
 
 			# SendEmail Signature: # app_id, email_list_id, subject, content, execute_time
-			case @job.execute_frequency
 
-				when 'immediate'
-					# SendEmailJob.perform_now(@job.app_id, @job.email_list_id, @job.content, @job.subject)
-				when 'execute_once'
-					Resque.enqueue_at_with_queue(
-						 'default',
-						 wait_once,
-						 SendEmailJob,
-						 app_id:        @job.app_id,
-						 email_list_id: @job.email_list_id,
-						 subject: @job.subject,
-						 content: @job.content
-					)
-				when 'execute_twice'
-					Resque.enqueue_at_with_queue(
-						 'default',
-						 wait_once,
-						 SendEmailJob,
-						 app_id:        @job.app_id,
-						 email_list_id: @job.email_list_id,
-						 subject: @job.subject,
-						 content: @job.content
-					)
-					Resque.enqueue_at_with_queue(
-						 'default',
-						 wait_twice,
-						 SendEmailJob,
-						 app_id:        @job.app_id,
-						 email_list_id: @job.email_list_id,
-						 subject: @job.subject,
-						 content: @job.content
-					)
-				when 'execute_thrice'
-					Resque.enqueue_at_with_queue(
-						 'default',
-						 wait_once,
-						 SendEmailJob,
-						 app_id:        @job.app_id,
-						 email_list_id: @job.email_list_id,
-						 subject: @job.subject,
-						 content: @job.content
-					)
-					Resque.enqueue_at_with_queue(
-						 'default',
-						 wait_twice,
-						 SendEmailJob,
-						 app_id:        @job.app_id,
-						 email_list_id: @job.email_list_id,
-						 subject: @job.subject,
-						 content: @job.content
-					)
-					Resque.enqueue_at_with_queue(
-						 'default',
-						 wait_thrice,
-						 SendEmailJob,
-						 app_id:        @job.app_id,
-						 email_list_id: @job.email_list_id,
-						 subject: @job.subject,
-						 content: @job.content
-					)
-			end
+			thisjob = SendEmailJob
+				      .set(
+					       wait: @job.execute_time.minutes) # TODO: Change to hours in PROD
+				      .perform_later(
+								 app_id:        @job.app_id,
+								 email_list_id: @job.email_list_id,
+								 subject:       @job.subject,
+								 content:       @job.content
+							)
+			@job.queue_identifier = thisjob.provider_job_id
+
+			# provider_job_id
 
 			render json: @job, status: :created, location: @job
 		else

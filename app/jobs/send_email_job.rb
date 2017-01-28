@@ -1,17 +1,7 @@
-require 'resque-meta'
-
-# https://github.com/lmarlow/resque-meta
-
-class SendEmailJob
-  extend Resque::Plugins::Meta
-
+class SendEmailJob < ApplicationJob
   @queue = :default
 
-  def test_email(subject, to, from, html_body, track_opens, email_list_name)
-    logger.debug "EMAIL SENT - List: " + email_list_name + " To: " + to + " Email Subject + Content: " + subject + " - " + html_body
-  end
-
-  def self.perform(job_id, app_id, email_list_id, email_subject, email_content)
+  def perform(*args)
 
     list = EmailList.where(app_id: app_id, id: email_list_id).first
 
@@ -33,7 +23,7 @@ class SendEmailJob
       # 	 :track_opens => 'true')
 
       # Postmark API - Development
-      test_email(email_subject, email.email_address, 'sender@mailfunnels.com', email_content, 'true', list.name)
+      logger.info "WORKER EMAIL SENT - "
 
 
       # AUDIT

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170104083301) do
+ActiveRecord::Schema.define(version: 20170127194701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 20170104083301) do
     t.integer  "hook_id",           :foreign_key=>{:references=>"hooks", :name=>"fk_jobs_hook_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__jobs_hook_id", :using=>:btree}
     t.integer  "campaign_id",       :foreign_key=>{:references=>"campaigns", :name=>"fk_jobs_campaign_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__jobs_campaign_id", :using=>:btree}
     t.datetime "execute_date"
+    t.string   "queue_identifier"
   end
 
   create_table "mail_funnel_server_configs", force: :cascade do |t|

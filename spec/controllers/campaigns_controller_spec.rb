@@ -29,7 +29,7 @@ RSpec.describe CampaignsController, type: :controller do
   # Campaign. As you add validations to Campaign, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    FactoryGirl.attributes_for(:campaign)
   }
 
   let(:invalid_attributes) {
