@@ -71,7 +71,30 @@ class JobsController < ApplicationController
 
 	# PATCH/PUT /jobs/1
 	def update
-		if @job.update(job_params)
+
+		if @job.executed && job_params.executed == false
+
+			success = @job.update(job_params)
+
+			thisjob = SendEmailJob
+				      .set(
+					       wait: @job.execute_time.minutes) # TODO: Change to hours in PROD
+				      .perform_later(
+								 app_id:        @job.app_id,
+								 email_list_id: @job.email_list_id,
+								 subject:       @job.subject,
+								 content:       @job.content
+							)
+			@job.queue_identifier = thisjob.provider_job_id
+
+			if success 
+				render json: @job
+			else
+				render json: @job.errors, status: :unprocessable_entity
+
+			end
+
+		elsif @job.update(job_params)
 			render json: @job
 		else
 			render json: @job.errors, status: :unprocessable_entity
