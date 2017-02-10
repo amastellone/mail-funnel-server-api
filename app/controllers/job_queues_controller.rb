@@ -4,21 +4,16 @@ class JobQueuesController < ApplicationController
 
 		if params.has_key?(:queue_identifier)
 			# Code to sidekiq
-			if sidekiq.job_id == true
-				#return job status
-				#If run
-			
-			elsif sidekiq.job_id == false
-				#job was already executed
+			queued_job = Sidekiq::Status::get_all params[:queue_identifier]
+			if queued_job
+				return queued_job
 			else
-				#this job doesnt exist
+				logger.error "This Job does not exists in Sidekiq"
 			end
 		else
 			logger.error "Jobs-Queue-Controller GET Queued Jobs - no queue_identifier was provided"
 			return 'Must pass-in an app-id'
 		end
-
-		render json: @jobs
 
 	end
 

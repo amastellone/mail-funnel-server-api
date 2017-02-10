@@ -60,6 +60,7 @@ class JobsController < ApplicationController
 								 content:       @job.content
 							)
 			@job.queue_identifier = thisjob.provider_job_id
+			@job.save
 
 			# provider_job_id
 
@@ -86,6 +87,7 @@ class JobsController < ApplicationController
 								 content:       @job.content
 							)
 			@job.queue_identifier = thisjob.provider_job_id
+			@job.save
 
 			if success 
 				render json: @job
