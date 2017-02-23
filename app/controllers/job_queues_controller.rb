@@ -7,7 +7,7 @@ class JobQueuesController < ApplicationController
 		if params.has_key?(:queue_identifier)
 			# fetch job status from sidekiq-status
 			status = Sidekiq::Status::get_all(params[:queue_identifier])
-    		logger.debug "The status of this job is: " + status['status']
+    		logger.debug "The status of this job is: " + status.to_json
     		my_hash = {:status => status['status']}
 			render :json => status['status']
 		else
