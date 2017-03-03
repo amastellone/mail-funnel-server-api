@@ -134,7 +134,7 @@ class API < Grape::API
 
 		# construct the installation URL and redirect the merchant
 		install_url = "http://#{shop}/admin/oauth/authorize?client_id=#{app_secret}"\
-                "&scope=#{app_scope}&redirect_uri=#{api_url}auth"
+                "&scope=#{app_scope}&redirect_uri=#{app_url}auth"
 
 		# redirect to the install_url
 		redirect install_url
@@ -165,8 +165,11 @@ class API < Grape::API
 		redirect bulk_edit_url
 	end
 
-	resource :cart do
-		get :create do
+	get 'cart_create' do
+
+			log.info("Cart Create Hook")
+
+
 			initvars()
 			shop  = params[:shop]
 			email = params[:email]
@@ -221,15 +224,15 @@ class API < Grape::API
 							# Identify Email-List By Store and Hook
 							# Add Email to Email-List
 						end
-
 					end
 				end
 			end
-		end
+	end
 
-		# WEBHOOKS
+		get '/cart_update' do
 
-		get '/cart/update' do
+			log.info("Cart Update Hook")
+
 			ShopifyAPI::Session.setup(api_key: app.settings.api_key,
 			                          secret: app.settings.shared_secret)
 
@@ -243,14 +246,69 @@ class API < Grape::API
 
 		end
 
-		get '/checkouts/create' do
+		get '/checkout_create' do
 		end
 
-		get '/checkouts/delete' do
+		get '/checkout_delete' do
 		end
 
-		get '/checkouts/update' do
+		get '/checkout_update' do
 		end
+
+	get '/metrics' do
+
+		job_id = params[:job]
+		# params[:sold]
+		# params[:sale_ammount]
+		email_id = params[:email]
+		# params[:BuyDate]
+
+		type = params[:type]
+		pid = params[:pid]
+
+		if type == 'product'
+
+			app = App.where(name: ShopifyAPI::Store.current.name)
+			job = Job.find(job_id)
+			campaign = Campaign.find(job.campaign_id)
+			email = Email.find(email_id)
+			email_list = EmailList.find(email.email_list_id)
+
+
+			lead = CampaignProductLead.new
+			lead.app_id = app.id
+			lead.campaign_id = campaign.id
+			lead.product_identifier = pid
+			lead.job_id = job_id
+			lead.email_list_id = email_list.id
+			lead.ClickDate = DateTime.now
+			# TODO: Check if we want click count
+			lead.save
+
+			product = ShopifyAPI::Product.find(pid)
+			redirect_to 'http://' + app.name + '/products/' + product.id #TODO: Check this works + http(s)
+		end
+
+	end
+
+	get 'checkout_complete' do
+
+		app = App.where(name: ShopifyAPI::Store.current.name)
+		emails = Email.where(name: ShopifyAPI::Customer.current.email)
+		products = params[:products]
+
+		while p : products
+
+			# Get the products iterate over all of them
+			# Iterate over emails incase the email is on multiple lists
+			# For each email, check if there is a lead
+			# If there is, update the lead to SOLD and add the sale_price
+
+			thisproduct = CampaignProductLead.where(app_id: app.id, product_identifier: p.id, email: email_id)
+
+			end
+		end
+
 	end
 
 

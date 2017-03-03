@@ -54,10 +54,10 @@ class JobsController < ApplicationController
 				      .set(
 					       wait: @job.execute_time.minutes) # TODO: Change to hours in PROD
 				      .perform_later(
-								 app_id:        @job.app_id,
-								 email_list_id: @job.email_list_id,
-								 subject:       @job.subject,
-								 content:       @job.content
+								 @job.app_id,
+								 @job.subject,
+								 @job.content,
+					       @job.id
 							)
 			@job.queue_identifier = thisjob.provider_job_id
 			@job.save
@@ -78,14 +78,19 @@ class JobsController < ApplicationController
 			success = @job.update(job_params)
 
 			thisjob = SendEmailJob
-				      .set(
-					       wait: @job.execute_time.minutes) # TODO: Change to hours in PROD
-				      .perform_later(
-								 app_id:        @job.app_id,
-								 email_list_id: @job.email_list_id,
-								 subject:       @job.subject,
-								 content:       @job.content
-							)
+				 .set(
+						wait: @job.execute_time.minutes) # TODO: Change to @job.execute_time.minutes.from_now
+				 .perform_later(
+						@job.app_id,
+						@job.subject,
+						@job.content,
+						@job.id
+				 )
+
+			logger.debug("Job: " + thisjob)
+			logger.debug("Job ID: " + thisjob.id)
+			logger.debug("Job Queue ID: " + thisjob.provider_job_id)
+
 			@job.queue_identifier = thisjob.provider_job_id
 			@job.save
 

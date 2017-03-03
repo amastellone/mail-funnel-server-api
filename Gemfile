@@ -32,7 +32,7 @@ gem 'rack-jwt'
 # gem 'apipie-rails'
 
 gem 'http'
-
+gem 'httparty'
 # Seeding Data Generator
 gem 'faker'
 

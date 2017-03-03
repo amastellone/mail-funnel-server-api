@@ -15,6 +15,30 @@ Rails JSON API RESTful Server, that also handles Shopify Webhooks and a Rails Cr
 - [Mail-Funnel Client-Server ISSUES](https://github.com/vaskaloidis/mail-funnel-client/issues)
 
 
+## Usage
+
+You must first start the Sidekiq Worker Server
+
+```bash
+bundle exec sidekiq -c 10 -q mailers
+```
+
+Then you run the server
+
+```bash
+bundle && rails db:reset && bundle exec rails s -p 3001
+// or simply
+bundle exec rails s -p 3001
+```
+
+Then you start the client
+
+```bash
+bundle && rails db:reset && bundle exec rails s
+// or simply
+bundle exec rails s
+```
+
 ## URL + DNS  
 
 

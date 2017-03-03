@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170209025412) do
+ActiveRecord::Schema.define(version: 20170303065740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,27 +47,6 @@ ActiveRecord::Schema.define(version: 20170209025412) do
     t.datetime "updated_at",      :null=>false
   end
 
-  create_table "configs", force: :cascade do |t|
-    t.string   "name"
-    t.string   "value"
-    t.datetime "created_at", :null=>false
-    t.datetime "updated_at", :null=>false
-  end
-
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",   :default=>0, :null=>false, :index=>{:name=>"delayed_jobs_priority", :with=>["run_at"], :using=>:btree}
-    t.integer  "attempts",   :default=>0, :null=>false
-    t.text     "handler",    :null=>false
-    t.text     "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "emails", force: :cascade do |t|
     t.string   "email_address"
     t.string   "name"
@@ -75,11 +54,6 @@ ActiveRecord::Schema.define(version: 20170209025412) do
     t.datetime "updated_at",    :null=>false
     t.integer  "app_id",        :foreign_key=>{:references=>"apps", :name=>"fk_emails_app_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__emails_app_id", :using=>:btree}
     t.integer  "email_list_id", :foreign_key=>{:references=>"email_lists", :name=>"fk_emails_email_list_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__emails_email_list_id", :using=>:btree}
-  end
-
-  create_table "job_queues", force: :cascade do |t|
-    t.datetime "created_at", :null=>false
-    t.datetime "updated_at", :null=>false
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -98,6 +72,32 @@ ActiveRecord::Schema.define(version: 20170209025412) do
     t.integer  "campaign_id",       :foreign_key=>{:references=>"campaigns", :name=>"fk_jobs_campaign_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__jobs_campaign_id", :using=>:btree}
     t.datetime "execute_date"
     t.string   "queue_identifier"
+    t.datetime "execute_set_time"
+  end
+
+  create_table "campaign_product_leads", force: :cascade do |t|
+    t.integer  "app_id",             :foreign_key=>{:references=>"apps", :name=>"fk_campaign_product_leads_app_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__campaign_product_leads_app_id", :using=>:btree}
+    t.integer  "product_identifier"
+    t.integer  "campaign_id",        :foreign_key=>{:references=>"campaigns", :name=>"fk_campaign_product_leads_campaign_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__campaign_product_leads_campaign_id", :using=>:btree}
+    t.integer  "job_id",             :foreign_key=>{:references=>"jobs", :name=>"fk_campaign_product_leads_job_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__campaign_product_leads_job_id", :using=>:btree}
+    t.boolean  "sold",               :default=>false
+    t.decimal  "sale_ammount",       :default=>"0.0"
+    t.integer  "email_list_id",      :foreign_key=>{:references=>"email_lists", :name=>"fk_campaign_product_leads_email_list_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__campaign_product_leads_email_list_id", :using=>:btree}
+    t.integer  "email_id",           :foreign_key=>{:references=>"emails", :name=>"fk_campaign_product_leads_email_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__campaign_product_leads_email_id", :using=>:btree}
+    t.datetime "BuyDate"
+    t.datetime "ClickDate"
+  end
+
+  create_table "configs", force: :cascade do |t|
+    t.string   "name"
+    t.string   "value"
+    t.datetime "created_at", :null=>false
+    t.datetime "updated_at", :null=>false
+  end
+
+  create_table "job_queues", force: :cascade do |t|
+    t.datetime "created_at", :null=>false
+    t.datetime "updated_at", :null=>false
   end
 
   create_table "mail_funnel_server_configs", force: :cascade do |t|
@@ -105,11 +105,6 @@ ActiveRecord::Schema.define(version: 20170209025412) do
     t.string   "value"
     t.datetime "created_at", :null=>false
     t.datetime "updated_at", :null=>false
-  end
-
-  create_table "mf_server_config", force: :cascade do |t|
-    t.string "name",  :index=>{:name=>"index_mf_server_config_on_name", :using=>:btree}
-    t.string "value"
   end
 
   create_table "shops", force: :cascade do |t|

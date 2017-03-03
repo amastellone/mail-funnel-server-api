@@ -126,13 +126,13 @@ if seed_data
 		while $j < Random.rand(10...30) do
 			job = Job.create(execute_frequency:   "execute_once",
 			                 execute_time:        Random.rand(0...23),
+			                 execute_set_time:    now,
 			                 subject:             Faker::Lorem.sentence,
 			                 content:             Faker::Lorem.paragraphs(1),
 			                 name:                Faker::Commerce.product_name,
 			                 app_id:              app.id,
 			                 hook_identifier:     Hook.offset(rand(Hook.count)).first.identifier,
 			                 executed:            false,
-			                 email_list_id:       list.id
 			)
 			puts "Job Created for " + job.hook_identifier.to_s
 			$j += 1
