@@ -37,7 +37,7 @@ if seed_data
 # TODO: Move this to client-install
 	if generate_client_data
 
-		app_create = App.new(name: "bluehelmet-dev")
+		app_create = App.new(name: ShopifyAPI::Shop.current.domain)
 		if app_create.new_record?
 			app_create.save!
 			puts "App did not exist, created with id: " + app.id.to_s
@@ -47,7 +47,7 @@ if seed_data
 
 		app         = app_create.id
 
-		# app_create = App.where(name: "bluehelmet-dev").first
+		# app_create = App.where(name: ShopifyAPI::Shop.current.domain).first
 		# app        = app_create.id
 		defaultlist = EmailList.new(name:        "Default",
 		                            description: "The default Mail-Funnel email list",
@@ -63,7 +63,6 @@ if seed_data
 		$y = 0
 		until $y > Random.rand(1...5) do
 			email = Email.create(email_address: Faker::Internet.email,
-			                     name:          Faker::Name.name,
 			                     app_id:        app,
 			                     email_list_id: defaultlist.id);
 			puts defaultlist.name.to_s + ": Email Created " + email.email.to_s

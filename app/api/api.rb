@@ -293,23 +293,28 @@ class API < Grape::API
 
 	get 'checkout_complete' do
 
-		app = App.where(name: ShopifyAPI::Store.current.name)
-		emails = Email.where(name: ShopifyAPI::Customer.current.email)
-		products = params[:products]
+		checkout_hook_feature = false
+		if checkout_hook_feature
+			app = App.where(name: ShopifyAPI::Store.current.name)
+			emails = Email.where(name: ShopifyAPI::Customer.current.email)
+			products = params[:products]
 
-		while p : products
+			# while p : products
 
-			# Get the products iterate over all of them
-			# Iterate over emails incase the email is on multiple lists
-			# For each email, check if there is a lead
-			# If there is, update the lead to SOLD and add the sale_price
+				# Get the products iterate over all of them
+				# Iterate over emails incase the email is on multiple lists
+				# For each email, check if there is a lead
+				# If there is, update the lead to SOLD and add the sale_price
 
-			thisproduct = CampaignProductLead.where(app_id: app.id, product_identifier: p.id, email: email_id)
+				thisproduct = CampaignProductLead.where(app_id: app.id, product_identifier: p.id, email: email_id)
 
-			end
+			# end
+
 		end
 
-	end
+
+		end
+
 
 
 	# REST API
