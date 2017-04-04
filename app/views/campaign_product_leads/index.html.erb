@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Campaign Product Leads</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>App</th>
+      <th>Product identifier</th>
+      <th>Campaign</th>
+      <th>Job</th>
+      <th>Sold</th>
+      <th>Sale ammount</th>
+      <th>Emaillist</th>
+      <th>Email</th>
+      <th>Buydate</th>
+      <th>Clickdate</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @campaign_product_leads.each do |campaign_product_lead| %>
+      <tr>
+        <td><%= campaign_product_lead.app %></td>
+        <td><%= campaign_product_lead.product_identifier %></td>
+        <td><%= campaign_product_lead.campaign %></td>
+        <td><%= campaign_product_lead.job %></td>
+        <td><%= campaign_product_lead.sold %></td>
+        <td><%= campaign_product_lead.sale_ammount %></td>
+        <td><%= campaign_product_lead.EmailList %></td>
+        <td><%= campaign_product_lead.email %></td>
+        <td><%= campaign_product_lead.BuyDate %></td>
+        <td><%= campaign_product_lead.ClickDate %></td>
+        <td><%= link_to 'Show', campaign_product_lead %></td>
+        <td><%= link_to 'Edit', edit_campaign_product_lead_path(campaign_product_lead) %></td>
+        <td><%= link_to 'Destroy', campaign_product_lead, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Campaign Product Lead', new_campaign_product_lead_path %>

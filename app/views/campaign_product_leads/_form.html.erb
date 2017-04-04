@@ -1,0 +1,67 @@
+<%= form_for(campaign_product_lead) do |f| %>
+  <% if campaign_product_lead.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(campaign_product_lead.errors.count, "error") %> prohibited this campaign_product_lead from being saved:</h2>
+
+      <ul>
+      <% campaign_product_lead.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :app_id %>
+    <%= f.text_field :app_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :product_identifier %>
+    <%= f.number_field :product_identifier %>
+  </div>
+
+  <div class="field">
+    <%= f.label :campaign_id %>
+    <%= f.text_field :campaign_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :job_id %>
+    <%= f.text_field :job_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :sold %>
+    <%= f.text_field :sold %>
+  </div>
+
+  <div class="field">
+    <%= f.label :sale_ammount %>
+    <%= f.text_field :sale_ammount %>
+  </div>
+
+  <div class="field">
+    <%= f.label :EmailList_id %>
+    <%= f.text_field :EmailList_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :email_id %>
+    <%= f.text_field :email_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :BuyDate %>
+    <%= f.datetime_select :BuyDate %>
+  </div>
+
+  <div class="field">
+    <%= f.label :ClickDate %>
+    <%= f.datetime_select :ClickDate %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

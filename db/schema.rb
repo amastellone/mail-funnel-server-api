@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170303065740) do
+ActiveRecord::Schema.define(version: 20170307023910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(version: 20170303065740) do
     t.integer  "email_id",           :foreign_key=>{:references=>"emails", :name=>"fk_campaign_product_leads_email_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__campaign_product_leads_email_id", :using=>:btree}
     t.datetime "BuyDate"
     t.datetime "ClickDate"
+    t.string   "Source"
   end
 
   create_table "configs", force: :cascade do |t|

@@ -1,18 +1,29 @@
 class BluehelmetUtil
 
-	def get_shopify_session_app_name
-		return clean_shopify_domain(session[:shopify_domain])
-	end
+	def self.get_app_name
 
-	def clean_shopify_domain(input)
-		input.split(".")
+		domain = 'bluehelmet-dev.myshopify.com'
 
-		if input.first == "www"
-			return input.at(1)
-		else
-			return input.first
+		begin
+			domain = ShopifyAPI::Shop.current.domain
+
+			if cookies.permanent[:shopify_app] == nil
+				cookies.permanent[:shopify_app] = "bluehelmet-dev.myshopify.com"
+			end
+
+		rescue => e
+			# logger.error(e.message)
 		end
 
+		return domain
+	end
+
+	def self.get_app_id
+		return App.where(name: BluehelmetUtil.get_app_name).first.id
+	end
+
+	def self.get_app
+		return App.where(name: BluehelmetUtil.get_app_name).first
 	end
 
 end

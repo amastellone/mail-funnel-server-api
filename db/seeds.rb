@@ -47,7 +47,7 @@ if seed_data
 
 		app         = app_create.id
 
-		# app_create = App.where(name: ShopifyAPI::Shop.current.domain).first
+		# app_create = BluehelmetUtil.get_app
 		# app        = app_create.id
 		defaultlist = EmailList.new(name:        "Default",
 		                            description: "The default Mail-Funnel email list",

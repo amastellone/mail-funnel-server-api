@@ -268,7 +268,7 @@ class API < Grape::API
 
 		if type == 'product'
 
-			app = App.where(name: ShopifyAPI::Store.current.name)
+			app = BluehelmetUtil.get_app
 			job = Job.find(job_id)
 			campaign = Campaign.find(job.campaign_id)
 			email = Email.find(email_id)
@@ -295,7 +295,7 @@ class API < Grape::API
 
 		checkout_hook_feature = false
 		if checkout_hook_feature
-			app = App.where(name: ShopifyAPI::Store.current.name)
+			app = BluehelmetUtil.get_app
 			emails = Email.where(name: ShopifyAPI::Customer.current.email)
 			products = params[:products]
 

@@ -1,5 +1,6 @@
 MailFunnelServer::Application.routes.draw do
 
+  resources :campaign_product_leads
   resources :job_queues
   resources :campaigns do
 	  resources :hooks
